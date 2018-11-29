@@ -6,6 +6,9 @@ import "./registerServiceWorker";
 
 Vue.config.productionTip = false;
 
+require("./assets/css/gso.css");
+require("./assets/css/obs.css");
+
 new Vue({
   router,
   store,
