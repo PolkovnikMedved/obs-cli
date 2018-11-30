@@ -6,3 +6,26 @@
     background-color:#333;
     color: #aaa;
 }
+
+.full-width{
+    width: 100%;
+}
+
+form{
+    margin: 10px;
+}
+
+.spaced{
+    margin: 5px;
+}
+
+.spaced-no-left{
+    margin-right:5px;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+span.c-form__required{
+    color: #9d0725;
+    font-weight: bold;
+}
