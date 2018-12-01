@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Welcome from "./components/welcome.vue";
-import Versions from "./components/version/all-versions.vue";
+import Documents from "./components/document/all-documents.vue";
 
 Vue.use(Router);
 
@@ -15,9 +15,9 @@ export default new Router({
       component: Welcome
     },
     {
-      path: "/versions",
-      name: "versions",
-      component: Versions
+      path: "/documents",
+      name: "documents",
+      component: Documents
     }
   ]
 });

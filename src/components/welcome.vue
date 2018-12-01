@@ -35,7 +35,7 @@
             <div class="l-row">
               <div class="l-col-offset-4 l-col-8">
                 <div class="c-form__field-group">
-                  <router-link :to="{ name: 'versions' }" class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button spaced-no-left" type="submit">Sign in</router-link>
+                  <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button spaced-no-left" type="submit">Sign in</router-link>
                 </div>
               </div>
             </div>

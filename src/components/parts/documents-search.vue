@@ -2,7 +2,7 @@
     <aside class="t-sidebar">
         <div class="l-row">
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced">Versions</button>
+                <button class="c-btn c-btn--primary c-btn--raised spaced">Documents</button>
             </div>
             <div class="l-col">
                 <button class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>

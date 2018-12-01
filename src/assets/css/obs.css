@@ -29,3 +29,7 @@ span.c-form__required{
     color: #9d0725;
     font-weight: bold;
 }
+
+div.l-row{
+    width:100%;
+}
