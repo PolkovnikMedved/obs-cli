@@ -1,6 +1,6 @@
 <template>
   <div class="t-body">
-    <documents-search />
+    <documents-search @filter="filter" />
     <main class="t-content">
       <div v-if="errors && errors.length">
         <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
@@ -59,12 +59,18 @@ export default {
   data() {
     return {
       errors: [],
-      documents: []
+      documents: []//,
+      //search: {}
     };
   },
   computed: {
     visible() {
       return state.visible;
+    }
+  },
+  methods: {
+      filter: function(search) {
+      console.log("From documents: " + search + "/" + JSON.stringify(search));
     }
   },
   components: { DocumentsSearch, Loader },
