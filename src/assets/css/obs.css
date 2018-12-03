@@ -33,3 +33,10 @@ span.c-form__required{
 div.l-row{
     width:100%;
 }
+.very-nice-bottom{
+    margin-bottom:20px;
+}
+
+.very-nice-top{
+    margin-top:20px;
+}
