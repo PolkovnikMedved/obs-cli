@@ -40,3 +40,12 @@ div.l-row{
 .very-nice-top{
     margin-top:20px;
 }
+
+li.c-list-item--is-active > a{
+    color: white;
+}
+
+span.wide-icon > span.material-design-icon > svg{
+    width:30px;
+    height:30px;
+}
