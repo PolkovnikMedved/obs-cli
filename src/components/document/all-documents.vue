@@ -42,7 +42,11 @@
                       <span class="s-text">{{ document.category.label.frenchLabel }}</span>
                     </div>
                     <div class="l-col-1">
-                      <span><plus-icon fill-color="#07b358" name="add"/></span>
+                      <span>
+                        <router-link :to="{ name: 'add-version', params: { doc_id: document.number } }">
+                          <plus-icon fill-color="#07b358" name="add" />
+                        </router-link>
+                      </span>
                     </div>
                   </div>
 
@@ -127,7 +131,9 @@
                   <span>{{ document.category.label.frenchLabel }}</span>
                 </div>
                 <div class="l-col-1">
-                  <span><plus-icon fill-color="#07b358"/></span>
+                  <router-link :to="{ name: 'add-version', params: { doc_id: document.number } }">
+                    <plus-icon fill-color="#07b358" name="add" />
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -171,6 +177,7 @@ import PlusIcon from "vue-material-design-icons/Plus";
 import Settings from "vue-material-design-icons/Settings";
 import SquareEditOutline from "vue-material-design-icons/SquareEditOutline";
 import ContentCopy from "vue-material-design-icons/ContentCopy";
+
 export default {
   name: "versions",
   data() {
@@ -178,7 +185,8 @@ export default {
       page: 1,
       errors: [],
       documents: [],
-      search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" }
+      search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" },
+      documentVersion: "0"
     };
   },
   computed: {

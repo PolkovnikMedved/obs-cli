@@ -4,8 +4,9 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import moment from "moment";
-//import "vue-material-design-icons/styles.css";
+import VModal from "vue-js-modal"
 
+Vue.use(VModal);
 Vue.config.productionTip = false;
 Vue.filter("formatDate", function(value) {
   if (value) {

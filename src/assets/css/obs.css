@@ -80,3 +80,11 @@ main{
 .with-roof:hover{
     background-color: ghostwhite;
 }
+
+.c-modal-custom{
+    font-size: 1.4rem;
+}
+
+textarea{
+    min-height: 100px;
+}
