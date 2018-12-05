@@ -45,7 +45,22 @@ li.c-list-item--is-active > a{
     color: white;
 }
 
+li.c-list-item--is-active > a:hover{
+    color: white;
+    background-color:#086cc4!important;
+    text-decoration:none!important;
+}
+
+
 span.wide-icon > span.material-design-icon > svg{
     width:30px;
     height:30px;
+}
+
+.l-row{
+    width:100%;
+}
+
+main{
+    overflow-y:auto;
 }

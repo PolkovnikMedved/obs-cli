@@ -25,8 +25,12 @@
                     <input id="doc-cat" class="c-form__field full-width" type="text" v-model="search.documentCategory" name="doc-cat" autocomplete="off">
                 </div>
                 <div class="c-form__field-group">
-                    <label for="author" class="c-form__label s-text--bold">Author</label>
-                    <input id="author" class="c-form__field full-width" type="text" v-model="search.author" name="author" autocomplete="off">
+                    <label for="created-by" class="c-form__label s-text--bold">Created By</label>
+                    <input id="created-by" class="c-form__field full-width" type="text" v-model="search.createdBy" name="created-by" autocomplete="off">
+                </div>
+                <div class="c-form__field-group">
+                    <label for="modified-by" class="c-form__label s-text--bold">Modified By</label>
+                    <input id="modified-by" class="c-form__field full-width" type="text" v-model="search.modifiedBy" name="modified-by" autocomplete="off">
                 </div>
             </fieldset>
             <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button spaced-no-left full-width s-text--center" v-on:click.prevent="forward" type="submit">Submit</button>
@@ -43,7 +47,7 @@ export default {
     return {
       documents: [],
       errors: [],
-      search: { documentNumber: "", documentName: "", documentCategory: "", author: "" }
+      search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" }
     };
   },
   methods: {
@@ -54,8 +58,8 @@ export default {
             .catch(e => {this.errors.push(e); console.log('Error: ' + e)})
     },
     forward: function() {
-        this.send();
-        this.$emit('filter', this.documents);
+        //this.send();
+        this.$emit('filter', this.search);
     }
   }
 };

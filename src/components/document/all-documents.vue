@@ -14,7 +14,7 @@
         <div class="l-col"><h1>Document versions management</h1></div>
       </div>
 
-      <div v-if="documents.content && documents.content.length" class="l-row">
+      <div v-if="documents.content && documents.content.length" class="l-row l-row--gutter">
         <div class="l-col-12">
           <div class="l-row">
             <div class="l-col-8">
@@ -23,18 +23,110 @@
             <div class="l-col-3">
               <span class="s-text s-text--bold">Category</span>
             </div>
-            <div class="l-col-1"></div>
           </div>
 
           <div v-for="(document, index) of documents.content" :key="index" class="l-row">
-            <div class="l-col-8">
-              <span><chevron-down fill-color="#086cc4"/> {{ document.number }} - {{ document.label.frenchLabel }}</span>
-            </div>
-            <div class="l-col-3">
-              <span>{{ document.category.label.frenchLabel }}</span>
-            </div>
-            <div class="l-col-1">
-              <span><plus-icon fill-color="#07b358"/></span>
+            <div class="l-col-12">
+
+              <div v-if="document.versions && document.versions.length" class="l-row">
+                <div class="l-col-12" @click="document.show = !document.show">
+
+                  <div class="l-row" v-bind:class="{ 'first-blue': document.show }">
+                    <div class="l-col-8">
+                      <span v-if="document.show"> <chevron-up fill-color="#086cc4"/> </span>
+                      <span v-else> <chevron-down fill-color="#086cc4"/> </span>
+                      <span class="s-text">{{document.number}} - {{document.label.frenchLabel}}</span>
+                    </div>
+                    <div class="l-col-3">
+                      <span class="s-text">{{ document.category.label.frenchLabel }}</span>
+                    </div>
+                    <div class="l-col-1">
+                      <span><plus-icon fill-color="#07b358" name="add"/></span>
+                    </div>
+                  </div>
+
+                  <div class="l-row" v-if="document.show">
+                    <div class="l-row" :class="{ 'second-blue': document.show }">
+                      <div class="l-col-1">
+                        <span class="s-text s-text--bold">Id</span>
+                      </div>
+
+                      <div class="l-col-3">
+                        <span class="s-text s-text--bold">Structure</span>
+                      </div>
+
+                      <div class="l-col-4">
+                        <span class="s-text s-text--bold">Description</span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span class="s-text s-text--bold">DFA</span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span class="s-text s-text--bold">Auteur</span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span class="s-text s-text--bold">Date</span>
+                      </div>
+                      <div class="l-col-1">
+                        <settings fill-color="#5a6772" name="settings"/>
+                      </div>
+                    </div>
+
+                    <div v-for="(version, index) of document.versions" class="l-row" :key="index"  style="padding:5px;">
+                      <div class="l-col-1">
+                        <span>{{ version.name }}</span>
+                      </div>
+
+                      <div class="l-col-3">
+                        <span v-if="version.structure != null && version.structure.name">{{ version.structure.name }}</span>
+                        <span v-else>{{ version.structure }}</span>
+                      </div>
+
+                      <div class="l-col-4">
+                        <span v-if="!version.desciption"></span>
+                        <span v-else-if="version.description.length <= 50">{{ version.description }}</span>
+                        <span class="c-tooltip" v-else>{{ version.description.substring(0, 50) }}... <span role="tooltip" data-position="tooltip-top">{{ version.description }}</span></span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span v-if="!version.desciption"></span>
+                        <span v-else-if="version.dfaName.length <= 5">{{ version.dfaName }}</span>
+                        <span class="c-tooltip" v-else>{{ version.dfaName.substring(0, 5) }}... <span role="tooltip" data-position="tooltip-top">{{ version.dfaName }}</span></span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span v-if="version.signature.modifiedBy === null">{{ version.signature.createdBy }}</span>
+                        <span>{{ version.signature.modifiedBy }}</span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <span v-if="version.signature.modifiedAt === null">{{ version.signature.createdAt | formatDate}}</span>
+                        <span>{{ version.signature.modifiedAt |formatDate }}</span>
+                      </div>
+
+                      <div class="l-col-1">
+                        <square-edit-outline fill-color="#086cc4" />
+                        <content-copy fill-color="#086cc4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-else class="l-row">
+                <div class="l-col-8">
+                  <span><chevron-down fill-color="#5a6772" text-fill="closed"/> {{ document.number }} - {{ document.label.frenchLabel }}</span>
+                </div>
+                <div class="l-col-3">
+                  <span>{{ document.category.label.frenchLabel }}</span>
+                </div>
+                <div class="l-col-1">
+                  <span><plus-icon fill-color="#07b358"/></span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -49,8 +141,8 @@
                     :page-link-class="'c-list-item'"
                     :active-class="'c-list-item--is-active'"
                     :click-handler="pageCallback">
-                  <span class="wide-icon" slot="prevContent"> <chevron-left fill-color="#086cc4" /> </span>
-                  <span class="wide-icon" slot="nextContent"> <chevron-right fill-color="#086cc4" /> </span>
+                  <span class="wide-icon" slot="prevContent"> <chevron-left name="previous" fill-color="#086cc4" /> </span>
+                  <span class="wide-icon" slot="nextContent"> <chevron-right name="next" fill-color="#086cc4" /> </span>
                 </paginate>
               </nav>
             </div>
@@ -70,14 +162,18 @@ import { HTTP } from "../../http-common";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft";
 import ChevronRight from "vue-material-design-icons/ChevronRight";
 import ChevronDown from "vue-material-design-icons/ChevronDown";
+import ChevronUp from "vue-material-design-icons/ChevronUp";
 import PlusIcon from "vue-material-design-icons/Plus";
+import Settings from "vue-material-design-icons/Settings";
+import SquareEditOutline from "vue-material-design-icons/SquareEditOutline";
+import ContentCopy from "vue-material-design-icons/ContentCopy";
 export default {
   name: "versions",
   data() {
     return {
       errors: [],
-      documents: []//,
-      //search: {}
+      documents: [],
+      search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" }
     };
   },
   computed: {
@@ -87,33 +183,49 @@ export default {
   },
   methods: {
     filter: function(search) {
-      console.log("From documents: " + JSON.stringify(search));
+      this.search = search;
+      this.getDocuments(0);
     },
-    pageCallback: function(pageNum){
+    pageCallback: function(pageNum) {
+      this.getDocuments(pageNum);
+    },
+    getDocuments: function(pageNum) {
       show();
-      HTTP.get("document/all?page=" + pageNum)
+      let url = "document/all?documentNumber="+this.search.documentNumber+"&documentName="+this.search.documentName+"&documentCategory="+this.search.documentCategory+"&createdBy="+this.search.createdBy+"&modifiedBy="+this.search.modifiedBy+"&page=" + pageNum;
+      HTTP.get(url)
         .then(r => {
           this.documents = r.data;
+          console.log("We have " + this.documents.content.length + " documents");
+          this.addProperty();
           hide();
         })
         .catch(e => {
           this.errors.push(e);
           hide();
         });
+    },
+    addProperty: function() {
+      // This will add 'show' property to our objects
+      Object.keys(this.documents.content).forEach(key => {
+        this.$set(this.documents.content[key], "show", false);
+      });
     }
   },
-  components: { DocumentsSearch, Loader, Paginate, ChevronLeft, ChevronRight, PlusIcon, ChevronDown },
+  components: {
+    DocumentsSearch,
+    Loader,
+    Paginate,
+    ChevronLeft,
+    ChevronRight,
+    PlusIcon,
+    ChevronDown,
+    ChevronUp,
+    Settings,
+    SquareEditOutline,
+    ContentCopy
+  },
   async beforeMount() {
-    show();
-    HTTP.get("document/all")
-      .then(response => {
-        this.documents = response.data;
-        hide();
-      })
-      .catch(e => {
-        this.errors.push(e);
-        hide();
-      });
+    this.getDocuments(0);
   }
 };
 </script>
