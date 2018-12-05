@@ -64,3 +64,19 @@ span.wide-icon > span.material-design-icon > svg{
 main{
     overflow-y:auto;
 }
+
+.first-blue{
+    background-color: rgb(206, 226, 243);
+}
+
+.second-blue{
+    background-color: rgb(230, 240, 249);
+}
+
+.with-roof{
+    border-top: 1px solid lightgray;
+}
+
+.with-roof:hover{
+    background-color: ghostwhite;
+}

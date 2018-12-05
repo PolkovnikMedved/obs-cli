@@ -2,7 +2,7 @@
     <aside class="t-sidebar">
         <div class="l-row">
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced">Documents</button>
+                <button class="c-btn c-btn--primary c-btn--raised spaced" v-on:click="reset">Documents</button>
             </div>
             <div class="l-col">
                 <button class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>
@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import { HTTP } from "../../http-common";
-
 export default {
   name: "doc-search",
   data() {
@@ -51,15 +49,12 @@ export default {
     };
   },
   methods: {
-    send: function() {
-        alert(this.search.documentNumber);
-        HTTP.get('/document/allFiltered?documentNumber='+this.search.documentNumber+'&documentName='+this.search.documentName+'&documentCategory='+this.search.documentCategory+'&author=' + this.search.author)
-            .then(r => {this.documents = r.data; console.log("Documents: " + JSON.stringify(this.documents))})
-            .catch(e => {this.errors.push(e); console.log('Error: ' + e)})
-    },
     forward: function() {
-        //this.send();
-        this.$emit('filter', this.search);
+      //this.send();
+      this.$emit("filter", this.search);
+    },
+    reset: function() {
+      this.$emit("reset");
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="t-body">
-    <documents-search @filter="filter" />
+    <documents-search @filter="filter" @reset="reset" />
     <main class="t-content">
       <div v-if="errors && errors.length">
         <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
@@ -25,7 +25,7 @@
             </div>
           </div>
 
-          <div v-for="(document, index) of documents.content" :key="index" class="l-row">
+          <div v-for="(document, index) of documents.content" :key="index" class="l-row with-roof">
             <div class="l-col-12">
 
               <div v-if="document.versions && document.versions.length" class="l-row">
@@ -35,7 +35,8 @@
                     <div class="l-col-8">
                       <span v-if="document.show"> <chevron-up fill-color="#086cc4"/> </span>
                       <span v-else> <chevron-down fill-color="#086cc4"/> </span>
-                      <span class="s-text">{{document.number}} - {{document.label.frenchLabel}}</span>
+                      <span v-if="document.label.frenchLabel && document.label.frenchLabel.length <= 70">{{document.number}} - {{document.label.frenchLabel}}</span>
+                      <span v-else-if="document.label.frenchLabel && document.label.frenchLabel.length > 70">{{document.number}} - <span class="c-tooltip">{{document.label.frenchLabel.substring(0, 70)}}...<span role="tooltip" data-position="tooltip-top">{{ document.label.frenchLabel }}</span></span></span>
                     </div>
                     <div class="l-col-3">
                       <span class="s-text">{{ document.category.label.frenchLabel }}</span>
@@ -118,7 +119,9 @@
 
               <div v-else class="l-row">
                 <div class="l-col-8">
-                  <span><chevron-down fill-color="#5a6772" text-fill="closed"/> {{ document.number }} - {{ document.label.frenchLabel }}</span>
+                  <span><chevron-down fill-color="#5a6772" text-fill="closed"/></span>
+                  <span v-if="document.label.frenchLabel && document.label.frenchLabel.length <= 70">{{document.number}} - {{document.label.frenchLabel}}</span>
+                  <span v-else-if="document.label.frenchLabel && document.label.frenchLabel.length > 70">{{document.number}} - <span class="c-tooltip">{{document.label.frenchLabel.substring(0, 70)}}...<span role="tooltip" data-position="tooltip-top">{{ document.label.frenchLabel }}</span></span></span>
                 </div>
                 <div class="l-col-3">
                   <span>{{ document.category.label.frenchLabel }}</span>
@@ -134,6 +137,7 @@
             <div class="l-col-12">
               <nav class="p-pagination" aria-label="pagination">
                 <paginate
+                    :forcePage="currentPage"
                     :pageCount="documents.totalPages"
                     :container-class="'c-list c-list--inline l-content--center'"
                     :prev-text="'f'"
@@ -171,6 +175,7 @@ export default {
   name: "versions",
   data() {
     return {
+      page: 1,
       errors: [],
       documents: [],
       search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" }
@@ -179,14 +184,23 @@ export default {
   computed: {
     visible() {
       return state.visible;
+    },
+    currentPage() {
+      return this.page - 1;
     }
   },
+  /* We should pay attention to pagination. Sometimes page 1 = 0, sometimes page 1 = 1, should be refactored before I'm retired.... */
   methods: {
+    reset: function() {
+      this.page = 1;
+      this.pageCallback(1);
+    },
     filter: function(search) {
       this.search = search;
       this.getDocuments(0);
     },
     pageCallback: function(pageNum) {
+      this.page = pageNum;
       this.getDocuments(pageNum);
     },
     getDocuments: function(pageNum) {
@@ -195,7 +209,6 @@ export default {
       HTTP.get(url)
         .then(r => {
           this.documents = r.data;
-          console.log("We have " + this.documents.content.length + " documents");
           this.addProperty();
           hide();
         })
