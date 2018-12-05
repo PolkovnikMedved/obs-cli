@@ -4,7 +4,7 @@
         <main class="t-content">
 
             <div v-if="updated" class="c-notification c-notification--success" role="dialog" aria-label="first notification" aria-describedby="desc_1">
-                <p id="desc_1" class="c-notification__message">La version à bien été créée.</p>
+                <p id="desc_1" class="c-notification__message">La version à bien été mise à jour.</p>
             </div>
 
             <div v-if="errors && errors.length">
@@ -13,22 +13,22 @@
                 </div>
             </div>
 
-            <div class="l-row l-row--gutter">
+            <div v-if="version && version.document && version.document.label" class="l-row l-row--gutter">
                 <div class="l-col">
-                    <h1>Ajout d'une version pour le document <span v-if="document">N°{{ document.number }}</span></h1>
+                    <h1>Document {{ version.document.label.frenchLabel }}</h1>
                 </div>
             </div>
 
             <div class="l-row l-row--gutter">
                 <div class="l-col">
-                    <h3><span v-if="document">{{ document.label.frenchLabel }}</span></h3>
+                    <h3>Mise à jour de la version <span v-if="version">{{ version.name }}</span></h3>
                 </div>
             </div>
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-6">
 
-                    <form class="c-form full-width" @submit.prevent="createVersion">
+                    <form class="c-form full-width" @submit.prevent="updateVersion">
                         <div class="l-row">
                             <fieldset class="c-form__fieldset s-text--center">
                                 <legend class="c-form__legend">Remplissez le formulaire</legend>
@@ -36,12 +36,12 @@
                                 <div class="l-row">
                                     <div class="l-col-3 l-justify--end nice-right">
                                         <div class="c-form__field-group">
-                                            <label for="id" class="c-form__label spaced">Version Name<span class="s-text s-text--danger">* </span></label>
+                                            <label for="id" class="c-form__label spaced">Version Name</label>
                                         </div>
                                     </div>
                                     <div class="l-col-7">
                                         <div class="c-form__field-group full-width">
-                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="version.name" required/>
+                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="version.name" disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -92,11 +92,10 @@ import { HTTP } from "../../http-common";
 import SimpleSidebar from "./../parts/simple-sidebar.vue";
 
 export default {
-    name: 'add-version',
-    props: ['doc_id'],
+    name: 'edit-version',
+    props: ['version_id'],
     data() {
         return {
-            document: [],
             version: {
                 name: '',
                 description: '',
@@ -109,9 +108,11 @@ export default {
     },
     computed: {},
     methods: {
-        createVersion: function () {
+        updateVersion: function () {
+            this.errors = [];
+            this.updated = false;
             this.version.document = this.document;
-            HTTP.post('/version/add', this.version, {headers: {'Content-Type': 'application/json'}})
+            HTTP.put('/version/update', this.version, {headers: {'Content-Type': 'application/json'}})
                 .then(r => {
                     this.version = r.data;
                     this.updated = true;
@@ -123,10 +124,10 @@ export default {
     },
     components: {SimpleSidebar},
     async beforeMount() {
-        let documentId = this.$route.params.doc_id;
-        HTTP.get('/document/' + documentId)
+        let versionId = this.$route.params.version_id;
+        HTTP.get('/version/' + versionId)
             .then(r => {
-                this.document = r.data;
+                this.version = r.data;
             })
             .catch(e => {
                 this.errors.push(e);

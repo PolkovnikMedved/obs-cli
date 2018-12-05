@@ -91,13 +91,13 @@
                       </div>
 
                       <div class="l-col-4">
-                        <span v-if="!version.desciption"></span>
+                        <span v-if="!version.description"></span>
                         <span v-else-if="version.description.length <= 50">{{ version.description }}</span>
                         <span class="c-tooltip" v-else>{{ version.description.substring(0, 50) }}... <span role="tooltip" data-position="tooltip-top">{{ version.description }}</span></span>
                       </div>
 
                       <div class="l-col-1">
-                        <span v-if="!version.desciption"></span>
+                        <span v-if="!version.dfaName"></span>
                         <span v-else-if="version.dfaName.length <= 5">{{ version.dfaName }}</span>
                         <span class="c-tooltip" v-else>{{ version.dfaName.substring(0, 5) }}... <span role="tooltip" data-position="tooltip-top">{{ version.dfaName }}</span></span>
                       </div>
@@ -113,7 +113,9 @@
                       </div>
 
                       <div class="l-col-1">
-                        <square-edit-outline fill-color="#086cc4" />
+                        <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }">
+                          <square-edit-outline title="Edit version" fill-color="#086cc4" />
+                        </router-link>
                         <content-copy fill-color="#086cc4" />
                       </div>
                     </div>

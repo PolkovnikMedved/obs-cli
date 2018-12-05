@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Welcome from "./components/welcome.vue";
 import Documents from "./components/document/all-documents.vue";
 import AddVersion from "./components/version/add-version.vue"
+import EditVersion from "./components/version/edit-version.vue";
 
 Vue.use(Router);
 
@@ -21,9 +22,14 @@ export default new Router({
       component: Documents
     },
     {
-      path: "/version/add",
+      path: "/document/:doc_id/add",
       name: "add-version",
       component: AddVersion
+    },
+    {
+      path: "/version/:version_id/edit",
+      name: "edit-version",
+      component: EditVersion
     }
   ]
 });
