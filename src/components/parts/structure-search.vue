@@ -1,12 +1,11 @@
 <template>
     <aside class="t-sidebar">
-        <!-- TODO -->
         <div class="l-row">
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced" v-on:click="reset">Documents</button>
+                <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised spaced">Documents</router-link>
             </div>
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>
+                <button @click.prevent="reset" class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>
             </div>
         </div>
 
@@ -14,16 +13,16 @@
             <fieldset class="c-form__fieldset">
                 <legend class="c-form__legend">Search</legend>
                 <div class="c-form__field-group">
-                    <label for="doc-num" class="c-form__label s-text--bold">Doc N°</label>
-                    <input id="doc-num" class="c-form__field full-width" type="text" v-model="search.documentNumber" name="doc-number" autocomplete="off">
+                    <label for="doc-num" class="c-form__label s-text--bold">Name</label>
+                    <input id="doc-num" class="c-form__field full-width" type="text" v-model="search.structureName" name="doc-number" autocomplete="off">
                 </div>
                 <div class="c-form__field-group">
-                    <label for="doc-name" class="c-form__label s-text--bold">Doc. name</label>
-                    <input id="doc-name" class="c-form__field full-width" type="text" v-model="search.documentName" name="doc-name" autocomplete="off">
+                    <label for="doc-name" class="c-form__label s-text--bold">Tag</label>
+                    <input id="doc-name" class="c-form__field full-width" type="text" v-model="search.structureTag" name="doc-name" autocomplete="off">
                 </div>
                 <div class="c-form__field-group">
-                    <label for="doc-cat" class="c-form__label s-text--bold">Doc. Cat.</label>
-                    <input id="doc-cat" class="c-form__field full-width" type="text" v-model="search.documentCategory" name="doc-cat" autocomplete="off">
+                    <label for="doc-cat" class="c-form__label s-text--bold">Description</label>
+                    <input id="doc-cat" class="c-form__field full-width" type="text" v-model="search.structureDescription" name="doc-cat" autocomplete="off">
                 </div>
                 <div class="c-form__field-group">
                     <label for="created-by" class="c-form__label s-text--bold">Created By</label>
@@ -46,7 +45,7 @@
             return {
                 documents: [],
                 errors: [],
-                search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" }
+                search: { structureName: "", structureTag: "", structureDescription: "", createdBy: "", modifiedBy: "" }
             };
         },
         methods: {

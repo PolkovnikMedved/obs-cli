@@ -5,7 +5,7 @@
                 <button class="c-btn c-btn--primary c-btn--raised spaced" v-on:click="reset">Documents</button>
             </div>
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>
+                <router-link :to="{ name: 'structures' }" class="c-btn c-btn--primary c-btn--raised spaced">Structures</router-link>
             </div>
         </div>
 

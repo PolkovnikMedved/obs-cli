@@ -2,6 +2,8 @@
   <div class="t-body">
     <documents-search @filter="filter" @reset="reset" />
     <main class="t-content">
+      <copy-version-modal :version_id="versionToCopy" :document_id="documentToCopy" @reload="closedModal" />
+
       <div v-if="errors && errors.length">
         <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
           <p>{{ error.message }}</p>
@@ -113,10 +115,12 @@
                       </div>
 
                       <div class="l-col-1">
-                        <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }">
-                          <square-edit-outline title="Edit version" fill-color="#086cc4" />
+                        <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }" class="blue-icon">
+                          <square-edit-outline title="Edit version" />
                         </router-link>
-                        <content-copy fill-color="#086cc4" />
+                        <a :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="orange-icon">
+                          <content-copy fill-color="#086cc4" />
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -179,6 +183,7 @@ import PlusIcon from "vue-material-design-icons/Plus";
 import Settings from "vue-material-design-icons/Settings";
 import SquareEditOutline from "vue-material-design-icons/SquareEditOutline";
 import ContentCopy from "vue-material-design-icons/ContentCopy";
+import CopyVersionModal from "../version/copy-version-modal.vue"
 
 export default {
   name: "versions",
@@ -188,7 +193,9 @@ export default {
       errors: [],
       documents: [],
       search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" },
-      documentVersion: "0"
+      documentVersion: "0",
+      versionToCopy: "",
+      documentToCopy: ""
     };
   },
   computed: {
@@ -201,6 +208,10 @@ export default {
   },
   /* We should pay attention to pagination. Sometimes page 1 = 0, sometimes page 1 = 1, should be refactored before I'm retired.... */
   methods: {
+    closedModal: function (event) {
+      console.log("Closed event: " + event);
+      this.reset();
+    },
     reset: function() {
       this.page = 1;
       this.pageCallback(1);
@@ -232,6 +243,12 @@ export default {
       Object.keys(this.documents.content).forEach(key => {
         this.$set(this.documents.content[key], "show", false);
       });
+    },
+    copyVersion: function(event) {
+      let element = event.currentTarget;
+      this.versionToCopy = element.getAttribute("data-version");
+      this.documentToCopy = element.getAttribute("data-document");
+      this.$modal.show("copy-version-modal");
     }
   },
   components: {
@@ -245,7 +262,8 @@ export default {
     ChevronUp,
     Settings,
     SquareEditOutline,
-    ContentCopy
+    ContentCopy,
+    CopyVersionModal
   },
   async beforeMount() {
     this.getDocuments(0);

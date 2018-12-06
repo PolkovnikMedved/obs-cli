@@ -57,6 +57,16 @@ span.wide-icon > span.material-design-icon > svg{
     height:30px;
 }
 
+th > span.material-design-icon > svg {
+    width: 18px;
+    height:18px;
+}
+
+td > span > span.material-design-icon > svg {
+    width: 20px;
+    height:20px;
+}
+
 .l-row{
     width:100%;
 }
@@ -87,4 +97,34 @@ main{
 
 textarea{
     min-height: 100px;
+}
+
+
+.table-cell-fifteen{
+    flex-basis:15%;
+}
+
+.table-cell-thirty-five{
+    flex-basis: 35%;
+}
+
+.table-cell-ten{
+    flex-basis: 10%;
+}
+
+.top-right-add{
+    margin:auto;
+}
+
+.top-right-add > span > svg {
+    width: 30px;
+    height: 30px;
+}
+
+.blue-icon > span > svg {
+    fill: #086cc4;
+}
+
+.orange-icon > span > svg {
+    fill: #e46f09;
 }

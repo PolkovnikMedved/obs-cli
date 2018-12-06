@@ -21,7 +21,7 @@
 
             <div class="l-row l-row--gutter">
                 <div class="l-col">
-                    <h3><span v-if="document">{{ document.label.frenchLabel }}</span></h3>
+                    <h3><span v-if="document && document.label">{{ document.label.frenchLabel }}</span></h3>
                 </div>
             </div>
 

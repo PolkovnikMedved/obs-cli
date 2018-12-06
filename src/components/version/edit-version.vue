@@ -128,6 +128,7 @@ export default {
         HTTP.get('/version/' + versionId)
             .then(r => {
                 this.version = r.data;
+                console.log("Version: " + JSON.stringify(this.version));
             })
             .catch(e => {
                 this.errors.push(e);

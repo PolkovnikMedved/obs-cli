@@ -5,7 +5,7 @@
                 <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised spaced">Documents</router-link>
             </div>
             <div class="l-col">
-                <button class="c-btn c-btn--primary c-btn--raised spaced">Structures</button>
+                <router-link :to="{ name: 'structures' }" class="c-btn c-btn--primary c-btn--raised spaced">Structures</router-link>
             </div>
         </div>
     </aside>
