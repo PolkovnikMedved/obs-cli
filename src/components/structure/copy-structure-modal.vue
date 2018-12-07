@@ -1,11 +1,11 @@
 <template>
-    <modal height="auto" name="copy-version-modal" :clickToClose="false" @before-close="reload">
+    <modal height="auto" name="copy-structure-modal" :clickToClose="false" @before-close="reload">
         <div class="c-modal-custom">
             <div class="c-modal__box">
                 <div class="c-modal__header">
-                    <h1>Copy version N°{{ version_id }}</h1>
-                    <button class="c-btn communist-button" type="button" @click="$modal.hide('copy-version-modal')">
-                    <close title="Close"/>
+                    <h1>Copy structure N°{{ structure_id }}</h1>
+                    <button class="c-btn communist-button" type="button" @click="$modal.hide('copy-structure-modal')">
+                        <close title="Close"/>
                     </button>
                 </div>
 
@@ -14,31 +14,29 @@
                     <success-alert :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
                         <h3>Origin</h3>
-                        <p>Document: {{ document_id }}</p>
-                        <p>Version : {{ version_id }} </p>
+                        <p>Structure: {{ structure_id }}</p>
 
                         <br/>
 
                         <h3>Destination</h3>
-                        <p>Document: {{ document_id }}</p>
                     </div>
 
                     <form class="c-form" @submit.prevent="createCopy">
                         <div class="l-row">
                             <fieldset class="c-form__fieldset c-form__fieldset--border">
 
-                                <legend class="c-form__legend">Enter a name for the new version</legend>
+                                <legend class="c-form__legend">Enter a name for the new structure</legend>
 
                                 <div class="l-row">
                                     <div class="l-col-3 l-justify--end nice-right">
                                         <div class="c-form__field-group">
-                                            <label for="id" class="c-form__label spaced">New version name</label>
+                                            <label for="id" class="c-form__label spaced">New structure name</label>
                                         </div>
                                     </div>
 
                                     <div class="l-col-5">
                                         <div class="c-form__field-group full-width">
-                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="newVersionName" placeholder="EX.: 950_COPY"/>
+                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="newStructureName" placeholder="EX.: 950_COPY"/>
                                         </div>
                                     </div>
                                 </div>
@@ -64,20 +62,20 @@ import ErrorAlert from "../parts/error-alert";
 import SuccessAlert from "../parts/success-alert";
 
 export default {
-    name: "copy-version-modal",
-    props: ["version_id", "document_id"],
+    name: "copy-structure-modal",
+    props: ["structure_id"],
     data () {
         return {
-            newVersionName: "",
+            newStructureName: "",
             errors: [],
             success: false,
-            successMessage: "Une nouvelle version a bien été créée"
+            successMessage: "Une nouvelle structure a bien été créée"
         };
     },
     methods: {
         createCopy: function () {
-            if(this.version_id !== this.newVersionName) {
-                HTTP.get("/version/copy?from=" + this.version_id + "&to=" + this.newVersionName)
+            if(this.structure_id !== this.newStructureName) {
+                HTTP.get("/structure/copy?from=" + this.structure_id + "&to=" + this.newStructureName)
                     .then(this.success = true)
                     .catch(e => this.errors.push(e));
             }

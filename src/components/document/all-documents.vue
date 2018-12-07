@@ -206,8 +206,7 @@ export default {
   },
   /* We should pay attention to pagination. Sometimes page 1 = 0, sometimes page 1 = 1, should be refactored before I'm retired.... */
   methods: {
-    closedModal: function (event) {
-      console.log("Closed event: " + event);
+    closedModal: function() {
       this.reset();
     },
     reset: function() {

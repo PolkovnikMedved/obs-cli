@@ -129,6 +129,10 @@ textarea{
     fill: #e46f09;
 }
 
+.communist-button > span > svg {
+    fill: #9d0725;
+}
+
 .sidebar-background{
     background-color: #f9f9f9;
 }

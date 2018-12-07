@@ -3,6 +3,7 @@
         <structure-search @filter="filter" @reset="reset"></structure-search>
 
         <main class="t-content">
+            <copy-structure-modal :structure_id="structureToCopy" @reload="closeModal"/>
             <error-alert :errors="errors" />
             <loader v-if="visible"></loader>
 
@@ -59,7 +60,9 @@
                                                 <span class="blue-icon"><square-edit-outline-icon title="Edit structure"/></span>
                                             </router-link>
                                             &nbsp;
-                                            <span class="orange-icon"><content-copy-icon title="Copy structure"/></span>
+                                            <a :data-structure="structure.name" @click.prevent="copyStructure($event)" class="orange-icon">
+                                                <content-copy-icon title="Copy structure"/>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -104,6 +107,7 @@ import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import ChevronRight from "vue-material-design-icons/ChevronRight.vue";
 import Paginate from "vuejs-paginate";
 import ErrorAlert from "../parts/error-alert";
+import CopyStructureModal from "./copy-structure-modal.vue";
 
 export default {
   name: "structures",
@@ -112,7 +116,8 @@ export default {
       page: 1,
       errors: [],
       structures: [],
-      search: { structureName: "", structureTag: "", structureDescription: "", createdBy: "", modifiedBy: "" }
+      search: { structureName: "", structureTag: "", structureDescription: "", createdBy: "", modifiedBy: "" },
+      structureToCopy: ""
     };
   },
   computed: {
@@ -133,9 +138,17 @@ export default {
     Loader,
     ChevronLeft,
     ChevronRight,
-    Paginate
+    Paginate,
+    CopyStructureModal
   },
   methods: {
+    closeModal: function() {
+      this.reset();
+    },
+    copyStructure: function($event) {
+      this.structureToCopy = $event.currentTarget.getAttribute("data-structure");
+      this.$modal.show("copy-structure-modal");
+    },
     getStructures: function(pageNum) {
       show();
       let url = "structure/all?name="+this.search.structureName+"&tag="+this.search.structureTag+"&description="+this.search.structureDescription+"&createdBy="+this.search.createdBy+"&modifiedBy="+this.search.modifiedBy+"&page=" + pageNum;
