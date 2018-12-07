@@ -1,5 +1,5 @@
 <template>
-    <aside class="t-sidebar">
+    <aside class="t-sidebar sidebar-background">
         <div class="l-row">
             <div class="l-col">
                 <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised spaced">Documents</router-link>

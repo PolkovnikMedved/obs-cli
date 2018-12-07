@@ -3,12 +3,7 @@
         <structure-search @filter="filter" @reset="reset"></structure-search>
 
         <main class="t-content">
-            <div v-if="errors && errors.length">
-                <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
-                    <p>{{ error.message }}</p>
-                </div>
-            </div>
-
+            <error-alert :errors="errors" />
             <loader v-if="visible"></loader>
 
             <div class="l-row l-row--gutter">
@@ -16,9 +11,9 @@
                     <h1>Structures management</h1>
                 </div>
                 <div class="l-col-1">
-                    <span class="top-right-add">
+                    <router-link :to="{ name: 'add-structure' }" class="top-right-add">
                         <plus-circle-icon fill-color="#07b358" title="Add structure"/>
-                    </span>
+                    </router-link>
                 </div>
             </div>
 
@@ -96,7 +91,7 @@
 
 <script>
 import StructureSearch from "../parts/structure-search.vue";
-import { state, show, hide } from "../tools/loader-component";
+import { hide, show, state } from "../tools/loader-component";
 import { HTTP } from "../../http-common";
 import Loader from "../tools/loader.vue";
 import PlusCircleIcon from "vue-material-design-icons/PlusCircle";
@@ -106,6 +101,7 @@ import ContentCopyIcon from "vue-material-design-icons/ContentCopy";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import ChevronRight from "vue-material-design-icons/ChevronRight.vue";
 import Paginate from "vuejs-paginate";
+import ErrorAlert from "../parts/error-alert";
 
 export default {
   name: "structures",
@@ -126,6 +122,7 @@ export default {
     }
   },
   components: {
+    ErrorAlert,
     ContentCopyIcon,
     SquareEditOutlineIcon,
     SettingsIcon,

@@ -128,3 +128,15 @@ textarea{
 .orange-icon > span > svg {
     fill: #e46f09;
 }
+
+.sidebar-background{
+    background-color: #f9f9f9;
+}
+
+.clean-fieldset{
+    background-color: #f9f9f9;
+}
+
+main.t-content{
+    margin-left: 5px;
+}

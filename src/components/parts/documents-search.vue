@@ -1,5 +1,5 @@
 <template>
-    <aside class="t-sidebar">
+    <aside class="t-sidebar sidebar-background">
         <div class="l-row">
             <div class="l-col">
                 <button class="c-btn c-btn--primary c-btn--raised spaced" v-on:click="reset">Documents</button>
@@ -11,7 +11,7 @@
 
         <form class="c-form c-form--block">
             <fieldset class="c-form__fieldset">
-                <legend class="c-form__legend">Search</legend>
+                <legend class="c-form__legend clean-fieldset">Search</legend>
                 <div class="c-form__field-group">
                     <label for="doc-num" class="c-form__label s-text--bold">Doc N°</label>
                     <input id="doc-num" class="c-form__field full-width" type="text" v-model="search.documentNumber" name="doc-number" autocomplete="off">

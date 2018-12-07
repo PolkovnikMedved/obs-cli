@@ -3,15 +3,8 @@
         <simple-sidebar/>
         <main class="t-content">
 
-            <div v-if="updated" class="c-notification c-notification--success" role="dialog" aria-label="first notification" aria-describedby="desc_1">
-                <p id="desc_1" class="c-notification__message">La version à bien été mise à jour.</p>
-            </div>
-
-            <div v-if="errors && errors.length">
-                <div v-for="error of errors" class="c-notification c-notification--danger">
-                    {{ error.message }}
-                </div>
-            </div>
+            <success-alert :success="updated" :success_message="successMessage" />
+            <error-alert :errors="errors" />
 
             <div v-if="version && version.document && version.document.label" class="l-row l-row--gutter">
                 <div class="l-col">
@@ -21,7 +14,7 @@
 
             <div class="l-row l-row--gutter">
                 <div class="l-col">
-                    <h3>Mise à jour de la version <span v-if="version">{{ version.name }}</span></h3>
+                    <h1>Mise à jour de la version <span v-if="version">{{ version.name }}</span></h1>
                 </div>
             </div>
 
@@ -30,7 +23,7 @@
 
                     <form class="c-form full-width" @submit.prevent="updateVersion">
                         <div class="l-row">
-                            <fieldset class="c-form__fieldset s-text--center">
+                            <fieldset class="c-form__fieldset c-form__fieldset--border">
                                 <legend class="c-form__legend">Remplissez le formulaire</legend>
 
                                 <div class="l-row">
@@ -90,6 +83,8 @@
 <script>
 import { HTTP } from "../../http-common";
 import SimpleSidebar from "./../parts/simple-sidebar.vue";
+import ErrorAlert from "../parts/error-alert";
+import SuccessAlert from "../parts/success-alert";
 
 export default {
     name: 'edit-version',
@@ -103,7 +98,8 @@ export default {
                 document: {}
             },
             errors: [],
-            updated: false
+            updated: false,
+            successMessage: "La version à bien été mise à jour."
         };
     },
     computed: {},
@@ -122,7 +118,7 @@ export default {
                 });
         }
     },
-    components: {SimpleSidebar},
+    components: {SuccessAlert, ErrorAlert, SimpleSidebar},
     async beforeMount() {
         let versionId = this.$route.params.version_id;
         HTTP.get('/version/' + versionId)

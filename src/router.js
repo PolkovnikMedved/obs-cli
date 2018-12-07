@@ -5,6 +5,7 @@ import Documents from "./components/document/all-documents.vue";
 import AddVersion from "./components/version/add-version.vue";
 import EditVersion from "./components/version/edit-version.vue";
 import AllStructures from "./components/structure/all-structures.vue";
+import AddStructure from "./components/structure/add-structure.vue";
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: "/structure/all",
       name: "structures",
       component: AllStructures
+    },
+    {
+      path: "/structure/add",
+      name: "add-structure",
+      component: AddStructure
     }
   ]
 });

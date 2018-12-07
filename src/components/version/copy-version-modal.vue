@@ -10,16 +10,8 @@
                 </div>
 
                 <div class="c-modal__body">
-                    <div v-if="errors && errors.length">
-                        <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
-                            <p>{{ error.message }}</p>
-                        </div>
-                    </div>
-
-                    <div v-if="success" class="c-notification c-notification--success">
-                        <p>Une nouvelle version a bien été créée</p>
-                    </div>
-
+                    <error-alert :errors="errors"/>
+                    <success-alert :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
                         <h3>Origin</h3>
                         <p>Document: {{ document_id }}</p>
@@ -68,6 +60,8 @@
 <script>
 import { HTTP } from "../../http-common";
 import Close from "vue-material-design-icons/Close.vue"
+import ErrorAlert from "../parts/error-alert";
+import SuccessAlert from "../parts/success-alert";
 
 export default {
     name: "copy-version-modal",
@@ -76,7 +70,8 @@ export default {
         return {
             newVersionName: "",
             errors: [],
-            success: false
+            success: false,
+            successMessage: "Une nouvelle version a bien été créée"
         };
     },
     methods: {
@@ -91,6 +86,6 @@ export default {
             this.$emit('reload');
         }
     },
-    components: { Close }
+    components: {SuccessAlert, ErrorAlert, Close }
 }
 </script>

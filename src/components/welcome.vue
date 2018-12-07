@@ -1,6 +1,8 @@
 <template>
   <div class="t-body">
     <main class="t-content">
+      <error-alert :errors="errors" />
+
       <div class="l-row l-row--gutter">
         <div class="l-col-offset-4 l-col-4 l-justify--center">
           <h1>{{ hello }}</h1>
@@ -47,15 +49,29 @@
 </template>
 
 <script>
+import { HTTP } from "../http-common";
+import ErrorAlert from "./parts/error-alert";
+
 export default {
   name: "welcome",
   data() {
     return {
-      hello: "Welcome to Observatory!"
+      hello: "Welcome to Observatory!",
+      serverMessage: "",
+      errors: []
     };
   },
   computed: {},
   methods: {},
-  components: {}
+  components: { ErrorAlert },
+  async beforeMount() {
+    // Let us see if the server is up
+    HTTP.get("")
+      .then(r => {
+        this.serverMessage = r.data;
+        console.log(JSON.stringify(this.serverMessage));
+      })
+      .catch(e => this.errors.push(e));
+  }
 };
 </script>

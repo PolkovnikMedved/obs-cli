@@ -4,11 +4,7 @@
     <main class="t-content">
       <copy-version-modal :version_id="versionToCopy" :document_id="documentToCopy" @reload="closedModal" />
 
-      <div v-if="errors && errors.length">
-        <div v-for="(error, index) of errors" :key="index" class="c-notification c-notification--danger">
-          <p>{{ error.message }}</p>
-        </div>
-      </div>
+      <error-alert :errors="errors" />
 
       <loader v-if="visible"></loader>
 
@@ -118,6 +114,7 @@
                         <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }" class="blue-icon">
                           <square-edit-outline title="Edit version" />
                         </router-link>
+                        &nbsp;
                         <a :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="orange-icon">
                           <content-copy fill-color="#086cc4" />
                         </a>
@@ -184,6 +181,7 @@ import Settings from "vue-material-design-icons/Settings";
 import SquareEditOutline from "vue-material-design-icons/SquareEditOutline";
 import ContentCopy from "vue-material-design-icons/ContentCopy";
 import CopyVersionModal from "../version/copy-version-modal.vue"
+import ErrorAlert from "../parts/error-alert";
 
 export default {
   name: "versions",
@@ -252,6 +250,7 @@ export default {
     }
   },
   components: {
+    ErrorAlert,
     DocumentsSearch,
     Loader,
     Paginate,
