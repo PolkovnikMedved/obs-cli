@@ -7,6 +7,7 @@ import EditVersion from "./components/version/edit-version.vue";
 import AllStructures from "./components/structure/all-structures.vue";
 import AddStructure from "./components/structure/add-structure.vue";
 import EditStructure from "./components/structure/edit-structure.vue";
+import StructureElements from "./components/element/structure-elements.vue";
 
 Vue.use(Router);
 
@@ -43,6 +44,11 @@ export default new Router({
       path: "/structure/add",
       name: "add-structure",
       component: AddStructure
+    },
+    {
+      path: "/structure/:structure_name",
+      name: "structure-elements",
+      component: StructureElements
     },
     {
       path: "/structure/:structure_name/edit",

@@ -3,7 +3,7 @@
         <div class="c-modal-custom">
             <div class="c-modal__box">
                 <div class="c-modal__header">
-                    <h1>Copy structure N°{{ structure_id }}</h1>
+                    <h1>Copy structure N°{{ structure_name }}</h1>
                     <button class="c-btn communist-button" type="button" @click="$modal.hide('copy-structure-modal')">
                         <close title="Close"/>
                     </button>
@@ -14,7 +14,7 @@
                     <success-alert :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
                         <h3>Origin</h3>
-                        <p>Structure: {{ structure_id }}</p>
+                        <p>Structure: {{ structure_name }}</p>
 
                         <br/>
 
@@ -63,7 +63,7 @@ import SuccessAlert from "../parts/success-alert";
 
 export default {
     name: "copy-structure-modal",
-    props: ["structure_id"],
+    props: ["structure_name"],
     data () {
         return {
             newStructureName: "",
@@ -74,8 +74,8 @@ export default {
     },
     methods: {
         createCopy: function () {
-            if(this.structure_id !== this.newStructureName) {
-                HTTP.get("/structure/copy?from=" + this.structure_id + "&to=" + this.newStructureName)
+            if(this.structure_name !== this.newStructureName) {
+                HTTP.get("/structure/copy?from=" + this.structure_name + "&to=" + this.newStructureName)
                     .then(this.success = true)
                     .catch(e => this.errors.push(e));
             }

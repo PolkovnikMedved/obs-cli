@@ -99,17 +99,32 @@ textarea{
     min-height: 100px;
 }
 
-
 .table-cell-fifteen{
     flex-basis:15%;
+}
+
+.table-cell-twenty{
+    flex-basis: 20%;
 }
 
 .table-cell-thirty-five{
     flex-basis: 35%;
 }
 
+.table-cell-thirty{
+    flex-basis: 30%;
+}
+
+.table-cell-twenty-five{
+    flex-basis: 25%;
+}
+
 .table-cell-ten{
     flex-basis: 10%;
+}
+
+.table-cell-five{
+    flex-basis: 5%;
 }
 
 .top-right-add{
@@ -133,6 +148,10 @@ textarea{
     fill: #9d0725;
 }
 
+.ecolo-button > span > svg {
+    fill: #07b358;
+}
+
 .sidebar-background{
     background-color: #f9f9f9;
 }
@@ -143,4 +162,12 @@ textarea{
 
 main.t-content{
     margin-left: 5px;
+}
+
+.nice-top {
+    margin-top: 5px;
+}
+
+.bottom-spaced{
+    margin-bottom: 20px;
 }

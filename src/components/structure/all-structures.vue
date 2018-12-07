@@ -3,7 +3,7 @@
         <structure-search @filter="filter" @reset="reset"></structure-search>
 
         <main class="t-content">
-            <copy-structure-modal :structure_id="structureToCopy" @reload="closeModal"/>
+            <copy-structure-modal :structure_name="structureToCopy" @reload="closeModal"/>
             <error-alert :errors="errors" />
             <loader v-if="visible"></loader>
 
@@ -38,7 +38,11 @@
 
                                 <tbody class="c-table__tbody">
                                     <tr v-for="(structure, index) of structures.content" :key="index" class="c-table__item">
-                                        <td class="c-table__cell table-cell-fifteen">{{ structure.name }}</td>
+                                        <td class="c-table__cell table-cell-fifteen">
+                                            <router-link :to="{ name: 'structure-elements', params: { structure_name: structure.name } }">
+                                                {{ structure.name }}
+                                            </router-link>
+                                        </td>
                                         <td class="c-table__cell table-cell-fifteen">{{ structure.tag }}</td>
                                         <td class="c-table__cell table-cell-thirty-five">
                                             <span v-if="structure.description && structure.description.length >= 50" class="c-tooltip">
