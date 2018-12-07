@@ -55,7 +55,9 @@
                                             <span v-else>{{ structure.signature.createdAt | formatDate }}</span>
                                         </td>
                                         <td class="c-table__cell table-cell-ten">
-                                            <span class="blue-icon"><square-edit-outline-icon title="Edit structure"/></span>
+                                            <router-link :to="{ name: 'edit-structure', params: { structure_name: structure.name } }">
+                                                <span class="blue-icon"><square-edit-outline-icon title="Edit structure"/></span>
+                                            </router-link>
                                             &nbsp;
                                             <span class="orange-icon"><content-copy-icon title="Copy structure"/></span>
                                         </td>

@@ -11,7 +11,7 @@
 
         <form class="c-form c-form--block">
             <fieldset class="c-form__fieldset clean-fieldset">
-                <legend class="c-form__legend">Search</legend>
+                <legend class="c-form__legend clean-fieldset">Search</legend>
                 <div class="c-form__field-group">
                     <label for="doc-num" class="c-form__label s-text--bold">Name</label>
                     <input id="doc-num" class="c-form__field full-width" type="text" v-model="search.structureName" name="doc-number" autocomplete="off">
