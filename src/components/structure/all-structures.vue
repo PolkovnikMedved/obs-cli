@@ -72,26 +72,32 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="l-row very-nice-bottom very-nice-top">
+                            <div class="l-col-12">
+                                <nav class="p-pagination" aria-label="pagination">
+                                    <paginate
+                                        :forcePage="currentPage"
+                                        :pageCount="structures.totalPages"
+                                        :container-class="'c-list c-list--inline l-content--center'"
+                                        :prev-text="'f'"
+                                        :next-text="'n'"
+                                        :page-link-class="'c-list-item'"
+                                        :active-class="'c-list-item--is-active'"
+                                        :click-handler="pageCallback">
+                                        <span class="wide-icon blue-icon" slot="prevContent"> <chevron-left name="Previous page" /> </span>
+                                        <span class="wide-icon blue-icon" slot="nextContent"> <chevron-right name="Next page" /> </span>
+                                    </paginate>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="l-row very-nice-bottom very-nice-top">
-                    <div class="l-col-12">
-                        <nav class="p-pagination" aria-label="pagination">
-                            <paginate
-                                :forcePage="currentPage"
-                                :pageCount="structures.totalPages"
-                                :container-class="'c-list c-list--inline l-content--center'"
-                                :prev-text="'f'"
-                                :next-text="'n'"
-                                :page-link-class="'c-list-item'"
-                                :active-class="'c-list-item--is-active'"
-                                :click-handler="pageCallback">
-                                <span class="wide-icon blue-icon" slot="prevContent"> <chevron-left name="Previous page" /> </span>
-                                <span class="wide-icon blue-icon" slot="nextContent"> <chevron-right name="Next page" /> </span>
-                            </paginate>
-                        </nav>
-                    </div>
+            <div v-else class="l-row">
+                <div class="l-col-12">
+                    <p>We did not find any structures based on your criteria.</p>
                 </div>
             </div>
         </main>

@@ -11,7 +11,7 @@
 
                 <div class="c-modal__body">
                     <error-alert :errors="errors"/>
-                    <success-alert :success="success" :success_message="this.successMessage"/>
+                    <success-alert @closeSuccess="closeSuccess" :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
                         <h3>Origin</h3>
                         <p>Structure: {{ structure_name }}</p>
@@ -82,6 +82,9 @@ export default {
         },
         reload: function() {
             this.$emit('reload');
+        },
+        closeSuccess: function() {
+            this.success = false;
         }
     },
     components: {SuccessAlert, ErrorAlert, Close }

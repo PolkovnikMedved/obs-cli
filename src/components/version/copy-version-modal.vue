@@ -11,7 +11,7 @@
 
                 <div class="c-modal__body">
                     <error-alert :errors="errors"/>
-                    <success-alert :success="success" :success_message="this.successMessage"/>
+                    <success-alert @closeSuccess="closeSuccess" :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
                         <h3>Origin</h3>
                         <p>Document: {{ document_id }}</p>
@@ -78,12 +78,19 @@ export default {
         createCopy: function () {
             if(this.version_id !== this.newVersionName) {
                 HTTP.get("/version/copy?from=" + this.version_id + "&to=" + this.newVersionName)
-                    .then(this.success = true)
+                    .then(r => {
+                        console.log(r.data);
+                        this.success = true;
+                    })
                     .catch(e => this.errors.push(e));
             }
         },
         reload: function() {
+            this.success = false;
             this.$emit('reload');
+        },
+        closeSuccess: function() {
+            this.success = false;
         }
     },
     components: {SuccessAlert, ErrorAlert, Close }

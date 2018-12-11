@@ -3,7 +3,7 @@
         <simple-sidebar></simple-sidebar>
 
         <main class="t-content">
-            <success-alert :success="created" :success_message="successMessage"/>
+            <success-alert @closeSuccess="closeSuccess" :success="created" :success_message="successMessage"/>
             <error-alert :errors="this.errors" />
 
             <div class="l-row l-row--gutter full-width">
@@ -106,6 +106,9 @@ export default {
         })
         .catch(e => { this.errors.push(e); });
       this.reset();
+    },
+    closeSuccess: function() {
+      this.success = false;
     }
   },
   computed: {

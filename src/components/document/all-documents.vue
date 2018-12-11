@@ -162,6 +162,12 @@
           </div>
         </div>
       </div>
+
+      <div class="l-row" v-else>
+        <div class="l-col-12">
+          <p>We did not find any documents based on your criteria.</p>
+        </div>
+      </div>
     </main>
   </div>
 </template>

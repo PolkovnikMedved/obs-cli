@@ -3,7 +3,7 @@
         <simple-sidebar></simple-sidebar>
 
         <main class="t-content">
-            <success-alert :success="updated" :success_message="successMessage"/>
+            <success-alert @closeSuccess="closeSuccess" :success="updated" :success_message="successMessage"/>
             <error-alert :errors="errors" />
             <loader v-if="visible"></loader>
 
@@ -117,6 +117,9 @@ export default {
           this.errors.push(e);
           hide();
         });
+    },
+    closeSuccess: function() {
+      this.success = false;
     }
   },
   components: { SimpleSidebar, ErrorAlert, SuccessAlert, Loader },
