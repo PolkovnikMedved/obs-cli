@@ -84,8 +84,11 @@
                       </div>
 
                       <div class="l-col-3">
-                        <span v-if="version.structure != null && version.structure.name">{{ version.structure.name }}</span>
-                        <span v-else>{{ version.structure }}</span>
+                        <span v-if="version.structure != null && version.structure.name">
+                          <router-link :to="{ name: 'structure-elements', params: { structure_name: version.structure.name } }">
+                            {{ version.structure.name }}
+                          </router-link>
+                        </span>
                       </div>
 
                       <div class="l-col-4">

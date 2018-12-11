@@ -23,16 +23,14 @@
                                 <div class="c-table__cell s-text--bold table-cell-five">Rep.</div>
                                 <div class="c-table__cell s-text--bold table-cell-twenty">Structure</div>
                                 <div class="c-table__cell s-text--bold table-cell-thirty">Description</div>
-<!--                                <div class="c-table__cell s-text&#45;&#45;bold table-cell-ten">Auteur</div>
-                                <div class="c-table__cell s-text&#45;&#45;bold table-cell-ten">Date Modif.</div>-->
                                 <div class="c-table__cell table-cell-fifteen">
                                     <settings-icon />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="c-table__tbody" v-if="structure.children">
-                            <div class="c-table__item" v-for="(element, index) of structure.children" :key="index">
+                        <div class="c-table__tbody" v-if="structure.elements">
+                            <div class="c-table__item" v-for="(element, index) of structure.elements" :key="index">
                                 <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
                                 <div class="c-table__cell s-text--sm table-cell-twenty">
                                     <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
@@ -54,21 +52,16 @@
                                     <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
                                     <span v-else>{{ element.description }}</span>
                                 </div>
-<!--                               <div class="c-table__cell s-text&#45;&#45;sm table-cell-ten">
-                                    <span v-if="element.signature.modifiedBy != null">{{ element.signature.modifiedBy }}</span>
-                                    <span v-else>{{ element.signature.createdBy }}</span>
-                                </div>
-                                <div class="c-table__cell s-text&#45;&#45;sm table-cell-ten">
-                                    <span v-if="element.signature.modifiedAt != null">{{ element.signature.modifiedAt | formatDate }}</span>
-                                    <span v-else>{{ element.signature.createdAt | formatDate }}</span>
-                                </div>-->
                                 <div class="c-table__cell s-text--sm table-cell-fifteen">
                                     <square-edit-outline-icon/>
                                     <span class="c-tooltip">
-                                        <information-icon/>
-                                        <span data-position="tooltip-left" role="tooltip">
-                                            Author: {{ element.signature.createdBy }}<br/>
-                                            Date: {{element.signature.createdAt | formatDate}}
+                                        <information-icon title="info"/>
+                                        <span role="tooltip" data-position="tooltip-left" class="large">
+                                            <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
+                                            <span v-else>Created by: {{ element.signature.createdBy }}</span>
+                                            <br/>
+                                            <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
+                                            <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
                                         </span>
                                     </span>
                                 </div>
