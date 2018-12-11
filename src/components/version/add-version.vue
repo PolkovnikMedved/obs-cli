@@ -3,7 +3,7 @@
         <simple-sidebar/>
         <main class="t-content">
 
-            <success-alert :success="updated" :success_message="success_message"/>
+            <success-alert @closeSuccess="closeSuccess" :success="updated" :success_message="success_message"/>
             <error-alert :errors="errors" />
 
             <div class="l-row l-row--gutter">
@@ -115,6 +115,9 @@ export default {
                 .catch(e => {
                     this.errors.push(e);
                 });
+        },
+        closeSuccess: function() {
+            this.updated = false;
         }
     },
     components: {ErrorAlert, SuccessAlert, SimpleSidebar},

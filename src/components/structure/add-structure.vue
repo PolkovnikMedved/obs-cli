@@ -108,7 +108,7 @@ export default {
       this.reset();
     },
     closeSuccess: function() {
-      this.success = false;
+      this.created = false;
     }
   },
   computed: {

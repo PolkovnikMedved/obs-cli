@@ -25,12 +25,10 @@
                             <table class="c-table c-table--striped full-width">
                                 <thead class="c-table__thead">
                                     <tr class="c-table__item">
-                                        <th class="c-table__cell table-cell-fifteen">Structure</th>
-                                        <th class="c-table__cell table-cell-fifteen">Tag</th>
-                                        <th class="c-table__cell table-cell-thirty-five">Description</th>
-                                        <th class="c-table__cell table-cell-fifteen">Author</th>
-                                        <th class="c-table__cell table-cell-ten">Date</th>
-                                        <th class="c-table__cell table-cell-ten">
+                                        <th class="c-table__cell table-cell-twenty-five">Structure</th>
+                                        <th class="c-table__cell table-cell-twenty-five">Tag</th>
+                                        <th class="c-table__cell table-cell-forty">Description</th>
+                                        <th class="c-table__cell table-cell-fifteen">
                                             <settings-icon title="Settings" fill-color="#5a6772"/>
                                         </th>
                                     </tr>
@@ -38,13 +36,14 @@
 
                                 <tbody class="c-table__tbody">
                                     <tr v-for="(structure, index) of structures.content" :key="index" class="c-table__item">
-                                        <td class="c-table__cell table-cell-fifteen">
+                                        <td class="c-table__cell table-cell-twenty-five">
                                             <router-link :to="{ name: 'structure-elements', params: { structure_name: structure.name } }">
-                                                {{ structure.name }}
+                                                <span v-if="structure.name.length >= 25" class="c-tooltip">{{ structure.name.substring(0, 25) }}<span role="tooltip" data-position="tooltip-top">{{ structure.name }}</span></span>
+                                                <span v-else>{{ structure.name }}</span>
                                             </router-link>
                                         </td>
-                                        <td class="c-table__cell table-cell-fifteen">{{ structure.tag }}</td>
-                                        <td class="c-table__cell table-cell-thirty-five">
+                                        <td class="c-table__cell table-cell-twenty-five">{{ structure.tag }}</td>
+                                        <td class="c-table__cell table-cell-forty">
                                             <span v-if="structure.description && structure.description.length >= 50" class="c-tooltip">
                                                 {{ structure.description.substring(0, 50) }}...
                                                 <span role="tooltip" data-position="tooltip-top">{{ structure.description }}</span>
@@ -52,21 +51,26 @@
                                             <span v-if="structure.description && structure.description.length < 50">{{ structure.description }}</span>
                                         </td>
                                         <td class="c-table__cell table-cell-fifteen">
-                                            <span v-if="structure && structure.signature && structure.signature.modifiedBy != null">{{ structure.signature.modifiedBy }}</span>
-                                            <span v-else>{{ structure.signature.createdBy }}</span>
-                                        </td>
-                                        <td class="c-table__cell table-cell-ten">
-                                            <span v-if="structure && structure.signature && structure.signature.modifiedAt != null">{{ structure.signature.modifiedAt | formatDate }}</span>
-                                            <span v-else>{{ structure.signature.createdAt | formatDate }}</span>
-                                        </td>
-                                        <td class="c-table__cell table-cell-ten">
                                             <router-link :to="{ name: 'edit-structure', params: { structure_name: structure.name } }">
                                                 <span class="blue-icon"><square-edit-outline-icon title="Edit structure"/></span>
                                             </router-link>
                                             &nbsp;
-                                            <a :data-structure="structure.name" @click.prevent="copyStructure($event)" class="orange-icon">
-                                                <content-copy-icon title="Copy structure"/>
+                                            <a :data-structure="structure.name" @click.prevent="copyStructure($event)">
+                                                <span class="orange-icon">
+                                                    <content-copy-icon title="Copy structure"/>
+                                                </span>
                                             </a>
+                                            &nbsp;
+                                            <span class="c-tooltip">
+                                                <information-icon title="info"/>
+                                                <span role="tooltip" data-position="tooltip-left" class="large">
+                                                    <span v-if="structure && structure.signature && structure.signature.modifiedBy != null">Modified by: {{ structure.signature.modifiedBy }}</span>
+                                                    <span v-else>Created by: {{ structure.signature.createdBy }}</span>
+                                                    <br/>
+                                                    <span v-if="structure && structure.signature && structure.signature.modifiedAt != null">Modified at: {{ structure.signature.modifiedAt | formatDate }}</span>
+                                                    <span v-else>Modified at: {{ structure.signature.createdAt | formatDate }}</span>
+                                                </span>
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -118,6 +122,7 @@ import ChevronRight from "vue-material-design-icons/ChevronRight.vue";
 import Paginate from "vuejs-paginate";
 import ErrorAlert from "../parts/error-alert";
 import CopyStructureModal from "./copy-structure-modal.vue";
+import InformationIcon from "vue-material-design-icons/Information";
 
 export default {
   name: "structures",
@@ -139,6 +144,7 @@ export default {
     }
   },
   components: {
+    InformationIcon,
     ErrorAlert,
     ContentCopyIcon,
     SquareEditOutlineIcon,

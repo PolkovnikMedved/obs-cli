@@ -148,7 +148,7 @@ export default {
         });
     },
     closeSuccess: function() {
-      this.success = false;
+      this.updated = false;
     }
   },
   components: { SuccessAlert, ErrorAlert, SimpleSidebar },

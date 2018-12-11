@@ -67,6 +67,11 @@ td > span > span.material-design-icon > svg {
     height:20px;
 }
 
+a > span > span.material-design-icon > svg {
+    width: 20px;
+    height:20px;
+}
+
 .l-row{
     width:100%;
 }
@@ -101,6 +106,10 @@ textarea{
 
 .table-cell-fifteen{
     flex-basis:15%;
+}
+
+.table-cell-forty{
+    flex-basis: 40%;
 }
 
 .table-cell-twenty{
@@ -170,4 +179,8 @@ main.t-content{
 
 .bottom-spaced{
     margin-bottom: 20px;
+}
+
+span.large {
+    min-width: 200px;
 }
