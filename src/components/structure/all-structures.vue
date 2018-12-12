@@ -52,11 +52,11 @@
                                         </td>
                                         <td class="c-table__cell table-cell-fifteen">
                                             <router-link :to="{ name: 'edit-structure', params: { structure_name: structure.name } }">
-                                                <span class="blue-icon"><square-edit-outline-icon title="Edit structure"/></span>
+                                                <span class="primary-icon"><square-edit-outline-icon title="Edit structure"/></span>
                                             </router-link>
                                             &nbsp;
                                             <a :data-structure="structure.name" @click.prevent="copyStructure($event)">
-                                                <span class="orange-icon">
+                                                <span class="warning-icon">
                                                     <content-copy-icon title="Copy structure"/>
                                                 </span>
                                             </a>
@@ -89,8 +89,8 @@
                                         :page-link-class="'c-list-item'"
                                         :active-class="'c-list-item--is-active'"
                                         :click-handler="pageCallback">
-                                        <span class="wide-icon blue-icon" slot="prevContent"> <chevron-left name="Previous page" /> </span>
-                                        <span class="wide-icon blue-icon" slot="nextContent"> <chevron-right name="Next page" /> </span>
+                                        <span class="wide-icon primary-icon" slot="prevContent"> <chevron-left name="Previous page" /> </span>
+                                        <span class="wide-icon primary-icon" slot="nextContent"> <chevron-right name="Next page" /> </span>
                                     </paginate>
                                 </nav>
                             </div>

@@ -145,11 +145,15 @@ textarea{
     height: 30px;
 }
 
-.blue-icon > span > svg {
+.info-icon > span > svg {
+    fill: #08abc4;
+}
+
+.primary-icon > span > svg {
     fill: #086cc4;
 }
 
-.orange-icon > span > svg {
+.warning-icon > span > svg {
     fill: #e46f09;
 }
 

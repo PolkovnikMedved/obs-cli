@@ -30,7 +30,7 @@
                                 <div class="l-row">
                                     <div class="l-col-3 l-justify--end nice-right">
                                         <div class="c-form__field-group">
-                                            <label for="id" class="c-form__label spaced">New structure name</label>
+                                            <label for="id" class="c-form__label spaced">New structure name <span class="s-text--warning s-text--bold">*</span></label>
                                         </div>
                                     </div>
 

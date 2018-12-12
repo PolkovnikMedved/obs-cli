@@ -29,32 +29,33 @@
                             </div>
                         </div>
 
-                        <div class="c-table__tbody" v-if="structure.elements">
-                            <div class="c-table__item" v-for="(element, index) of structure.elements" :key="index">
-                                <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
-                                <div class="c-table__cell s-text--sm table-cell-twenty">
-                                    <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
-                                    <span v-else-if="element.tag != null">{{ element.tag }}</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-five">
-                                    <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
-                                    <span v-else class="communist-button"><close-icon/></span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-five">
-                                    <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
-                                    <span v-else class="communist-button"><close-icon/></span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-twenty">
-                                    <span v-if="element.typeStructure">{{ element.typeStructure.name }}</span>
-                                    <span v-else>TERMINAL</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-thirty">
-                                    <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
-                                    <span v-else>{{ element.description }}</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-fifteen">
-                                    <square-edit-outline-icon/>
-                                    <span class="c-tooltip">
+                        <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody">
+                            <transition-group>
+                                <div class="c-table__item" v-for="element of structure.elements" :key="element.sequence">
+                                    <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
+                                    <div class="c-table__cell s-text--sm table-cell-twenty">
+                                        <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
+                                        <span v-else-if="element.tag != null">{{ element.tag }}</span>
+                                    </div>
+                                    <div class="c-table__cell s-text--sm table-cell-five">
+                                        <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
+                                        <span v-else class="communist-button"><close-icon/></span>
+                                    </div>
+                                    <div class="c-table__cell s-text--sm table-cell-five">
+                                        <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
+                                        <span v-else class="communist-button"><close-icon/></span>
+                                    </div>
+                                    <div class="c-table__cell s-text--sm table-cell-twenty">
+                                        <span v-if="element.typeStructure">{{ element.typeStructure.name }}</span>
+                                        <span v-else>TERMINAL</span>
+                                    </div>
+                                    <div class="c-table__cell s-text--sm table-cell-thirty">
+                                        <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
+                                        <span v-else>{{ element.description }}</span>
+                                    </div>
+                                    <div class="c-table__cell s-text--sm table-cell-fifteen">
+                                        <span class="primary-icon"><square-edit-outline-icon/></span>
+                                        <span class="c-tooltip info-icon">
                                         <information-icon title="info"/>
                                         <span role="tooltip" data-position="tooltip-left" class="large">
                                             <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
@@ -64,9 +65,10 @@
                                             <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
                                         </span>
                                     </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </transition-group>
+                        </draggable>
                     </div>
                 </div>
             </div>
@@ -84,7 +86,8 @@ import SettingsIcon from "vue-material-design-icons/Settings";
 import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
 import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
-import InformationIcon from "vue-material-design-icons/Information";
+import InformationIcon from "vue-material-design-icons/InformationVariant";
+import Draggable from "vuedraggable";
 
 export default {
   name: "structure-elements",
@@ -103,7 +106,7 @@ export default {
       return this.$route.params.structure_name;
     }
   },
-  components: { InformationIcon, SquareEditOutlineIcon, SettingsIcon, SimpleSidebar, ErrorAlert, Loader, CheckIcon, CloseIcon },
+  components: { InformationIcon, SquareEditOutlineIcon, SettingsIcon, SimpleSidebar, ErrorAlert, Loader, CheckIcon, CloseIcon, Draggable },
   async beforeMount() {
     show();
     HTTP.get("structure/" + this.getStructureName)

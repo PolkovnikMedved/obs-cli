@@ -114,11 +114,11 @@
                       </div>
 
                       <div class="l-col-1">
-                        <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }" class="blue-icon">
+                        <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }" class="primary-icon">
                           <square-edit-outline title="Edit version" />
                         </router-link>
                         &nbsp;
-                        <a :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="orange-icon">
+                        <a :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="warning-icon">
                           <content-copy fill-color="#086cc4" />
                         </a>
                       </div>
