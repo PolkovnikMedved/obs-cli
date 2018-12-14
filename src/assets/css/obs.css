@@ -136,6 +136,10 @@ textarea{
     flex-basis: 5%;
 }
 
+.table-cell-one-hundred{
+    flex-basis: 100%;
+}
+
 .top-right-add{
     margin:auto;
 }

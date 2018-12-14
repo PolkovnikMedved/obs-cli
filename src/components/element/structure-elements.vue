@@ -1,162 +1,102 @@
 <template>
     <div class="t-body">
-        <simple-sidebar/>
+        <elements-sidebar/>
 
         <main class="t-content">
-            <loader v-if="visible"></loader>
-            <error-alert :errors="errors" />
-            <success-alert :success="orderSuccessfullyChanged" :success_message="successMessage" @closeSuccess="closeSuccess"/>
+            <loader v-if="visible"/>
+            <error-alert :errors="errors"/>
+            <success-alert :success="orderSuccessfullyChanged" :success_message="orderChangedMessage" @closeSuccess="closeSuccess"/>
 
             <div class="l-row bottom-spaced">
                 <div class="l-col-6">
-                    <h1>Structure {{ getStructureName }}</h1>
+                    <h1>Structure <span v-if="currentStructure && currentStructure.name">{{ currentStructure.name }}</span></h1>
                 </div>
                 <div class="l-col-6 l-justify--end">
                     <span v-if="orderChanged" style="padding-top:10px; padding-right:10px;">
-                        <span>The order has changed. Do you want to save ?</span> &nbsp;
-                        <button class="c-btn c-btn--success c-btn--raised" @click="updateOrder">Save</button>
+                        <span>The order has been changed. Do you want to save ?</span>&nbsp;
+                        <button class="c-btn c-btn--success c-btn--raised" @click="updateOrder">Save</button>&nbsp;
                     </span>
                 </div>
             </div>
 
-            <div class="l-row">
+            <div class="l-row l-row--gutter">
                 <div class="l-col-12">
-                    <div class="c-table c-table--striped full-width nice-top">
-                        <div class="c-table__thead">
-                            <div class="c-table__item">
-                                <div class="c-table__cell s-text--bold table-cell-five">#</div>
-                                <div class="c-table__cell s-text--bold table-cell-twenty">Tag</div>
-                                <div class="c-table__cell s-text--bold table-cell-five">Opt.</div>
-                                <div class="c-table__cell s-text--bold table-cell-five">Rep.</div>
-                                <div class="c-table__cell s-text--bold table-cell-twenty">Structure</div>
-                                <div class="c-table__cell s-text--bold table-cell-thirty">Description</div>
-                                <div class="c-table__cell table-cell-fifteen">
-                                    <settings-icon />
-                                </div>
-                            </div>
-                        </div>
-
-                        <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody" @end="draggableEnd" @update="updateEnd">
-                            <div class="c-table__item" v-for="element of structure.elements" :key="element.sequence">
-                                <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
-                                <div class="c-table__cell s-text--sm table-cell-twenty">
-                                    <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
-                                    <span v-else-if="element.tag != null">{{ element.tag }}</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-five">
-                                    <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
-                                    <span v-else class="communist-button"><close-icon/></span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-five">
-                                    <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
-                                    <span v-else class="communist-button"><close-icon/></span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-twenty">
-                                    <span v-if="element.typeStructure">{{ element.typeStructure.name }}</span>
-                                    <span v-else>TERMINAL</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-thirty">
-                                    <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
-                                    <span v-else>{{ element.description }}</span>
-                                </div>
-                                <div class="c-table__cell s-text--sm table-cell-fifteen">
-                                    <span class="primary-icon"><square-edit-outline-icon/></span>
-                                    <span class="c-tooltip info-icon">
-                                    <information-icon title="info"/>
-                                    <span role="tooltip" data-position="tooltip-left" class="large">
-                                        <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
-                                        <span v-else>Created by: {{ element.signature.createdBy }}</span>
-                                        <br/>
-                                        <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
-                                        <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
-                                    </span>
-                                </span>
-                                </div>
-                            </div>
-                        </draggable>
-                    </div>
+                    <span v-for="el of history" :key="el.name">
+                        <span>{{ el.name }}</span>
+                    </span>
                 </div>
             </div>
+
+            <elements-list :structure="currentStructure" @elementsReordered="elementsReordered" @reloadStructure="changeStructure"/>
         </main>
     </div>
 </template>
 
 <script>
-import SimpleSidebar from "../parts/simple-sidebar.vue";
-import ErrorAlert from "../parts/error-alert";
 import Loader from "../tools/loader.vue";
 import { hide, show, state } from "../tools/loader-component";
 import { HTTP } from "../../http-common";
-import SettingsIcon from "vue-material-design-icons/Settings";
-import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
-import CheckIcon from "vue-material-design-icons/Check";
-import CloseIcon from "vue-material-design-icons/Close";
-import InformationIcon from "vue-material-design-icons/InformationVariant";
-import Draggable from "vuedraggable";
 import SuccessAlert from "../parts/success-alert";
+import ElementsSidebar from "../parts/elements-sidebar";
+import ElementsList from "./elements-list";
+import ErrorAlert from "../parts/error-alert";
 
 export default {
   name: "structure-elements",
   props: ["structure_name"],
   data() {
     return {
-      errors: [],
-      structure: {},
       initialElements: [],
+      initialStructure: [],
+      currentStructure: [],
+      errors: [],
+      history: [],
       orderChanged: false,
       orderSuccessfullyChanged: false,
-      successMessage: ""
+      orderChangedMessage: "The order has been successfully changed"
     };
   },
   computed: {
     visible() {
       return state.visible;
-    },
-    getStructureName() {
-      return this.$route.params.structure_name;
     }
   },
   methods: {
-    updateEnd: function() {
-      //this.orderChanged = true;
-
-      let changed = false;
-      if (this.initialElements.length === this.structure.elements.length) {
-        for (let i = 0; i < this.initialElements.length; i++) {
-          if (this.initialElements[i].sequence !== this.structure.elements[i].sequence) {
-            changed = true;
-            break;
-          }
-        }
-      }
-
-      this.orderChanged = changed;
-    },
-    draggableEnd: function() {
-      console.log("Draggable end");
-    },
     updateOrder: function() {
-      HTTP.put("structure/update-order", this.structure)
+      HTTP.put("structure/update-order", this.currentStructure)
         .then(r => {
-          console.log("The order has changed");
-          this.structure = r.data;
+          this.currentStructure = r.data;
           this.orderChanged = false;
           this.orderSuccessfullyChanged = true;
-          this.successMessage = "The order has been successfully changed.";
         })
         .catch(e => this.errors.push(e));
     },
     closeSuccess: function() {
       this.orderSuccessfullyChanged = false;
-    }
+    },
+    elementsReordered: function() {
+      let changed = false;
+      if (this.currentStructure.elements.length === this.initialElements.length) {
+        for (let i = 0; i < this.initialElements.length; i++) {
+          if (this.currentStructure.elements[i] !== this.initialElements[i]) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      this.orderChanged = changed;
+    },
+    changeStructure: function() {} //TODO implement navigation inside children without changing the route
   },
-  components: {SuccessAlert, InformationIcon, SquareEditOutlineIcon, SettingsIcon, SimpleSidebar, ErrorAlert, Loader, CheckIcon, CloseIcon, Draggable },
+  components: { Loader, SuccessAlert, ElementsSidebar, ElementsList, ErrorAlert },
   async beforeMount() {
     show();
-    HTTP.get("structure/" + this.getStructureName)
+    HTTP.get("structure/" + this.$route.params.structure_name)
       .then(r => {
-        this.structure = r.data;
-        this.initialElements = this.structure.elements;
+        this.initialStructure = r.data;
+        this.initialElements = this.initialStructure.elements;
+        this.currentStructure = this.initialStructure;
+        this.history.push(this.initialStructure);
         hide();
       })
       .catch(e => {

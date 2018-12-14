@@ -9,7 +9,10 @@
 import CloseIcon from "vue-material-design-icons/Close.vue";
 export default {
   name: "success-alert",
-  props: ["success", "success_message"],
+  props: {
+    success: { type: Boolean, required: true },
+    success_message: { type: String, required: true }
+  },
   components: { CloseIcon },
   methods: {
     closeAlert: function() {

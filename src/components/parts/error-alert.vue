@@ -12,7 +12,7 @@ import CloseIcon from "vue-material-design-icons/Close.vue";
 
 export default {
   name: "error-alert",
-  props: ["errors"],
+  props: { errors: { type: Array, required: true } },
   data() {
     return {
       created: false
