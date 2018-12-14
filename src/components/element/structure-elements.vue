@@ -5,10 +5,17 @@
         <main class="t-content">
             <loader v-if="visible"></loader>
             <error-alert :errors="errors" />
+            <success-alert :success="orderSuccessfullyChanged" :success_message="successMessage" @closeSuccess="closeSuccess"/>
 
             <div class="l-row bottom-spaced">
-                <div class="l-col-12">
+                <div class="l-col-6">
                     <h1>Structure {{ getStructureName }}</h1>
+                </div>
+                <div class="l-col-6 l-justify--end">
+                    <span v-if="orderChanged" style="padding-top:10px; padding-right:10px;">
+                        <span>The order has changed. Do you want to save ?</span> &nbsp;
+                        <button class="c-btn c-btn--success c-btn--raised" @click="updateOrder">Save</button>
+                    </span>
                 </div>
             </div>
 
@@ -29,45 +36,43 @@
                             </div>
                         </div>
 
-                        <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody">
-                            <transition-group>
-                                <div class="c-table__item" v-for="element of structure.elements" :key="element.sequence">
-                                    <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
-                                    <div class="c-table__cell s-text--sm table-cell-twenty">
-                                        <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
-                                        <span v-else-if="element.tag != null">{{ element.tag }}</span>
-                                    </div>
-                                    <div class="c-table__cell s-text--sm table-cell-five">
-                                        <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
-                                        <span v-else class="communist-button"><close-icon/></span>
-                                    </div>
-                                    <div class="c-table__cell s-text--sm table-cell-five">
-                                        <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
-                                        <span v-else class="communist-button"><close-icon/></span>
-                                    </div>
-                                    <div class="c-table__cell s-text--sm table-cell-twenty">
-                                        <span v-if="element.typeStructure">{{ element.typeStructure.name }}</span>
-                                        <span v-else>TERMINAL</span>
-                                    </div>
-                                    <div class="c-table__cell s-text--sm table-cell-thirty">
-                                        <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
-                                        <span v-else>{{ element.description }}</span>
-                                    </div>
-                                    <div class="c-table__cell s-text--sm table-cell-fifteen">
-                                        <span class="primary-icon"><square-edit-outline-icon/></span>
-                                        <span class="c-tooltip info-icon">
-                                        <information-icon title="info"/>
-                                        <span role="tooltip" data-position="tooltip-left" class="large">
-                                            <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
-                                            <span v-else>Created by: {{ element.signature.createdBy }}</span>
-                                            <br/>
-                                            <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
-                                            <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
-                                        </span>
-                                    </span>
-                                    </div>
+                        <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody" @end="draggableEnd" @update="updateEnd">
+                            <div class="c-table__item" v-for="element of structure.elements" :key="element.sequence">
+                                <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
+                                <div class="c-table__cell s-text--sm table-cell-twenty">
+                                    <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
+                                    <span v-else-if="element.tag != null">{{ element.tag }}</span>
                                 </div>
-                            </transition-group>
+                                <div class="c-table__cell s-text--sm table-cell-five">
+                                    <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
+                                    <span v-else class="communist-button"><close-icon/></span>
+                                </div>
+                                <div class="c-table__cell s-text--sm table-cell-five">
+                                    <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
+                                    <span v-else class="communist-button"><close-icon/></span>
+                                </div>
+                                <div class="c-table__cell s-text--sm table-cell-twenty">
+                                    <span v-if="element.typeStructure">{{ element.typeStructure.name }}</span>
+                                    <span v-else>TERMINAL</span>
+                                </div>
+                                <div class="c-table__cell s-text--sm table-cell-thirty">
+                                    <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
+                                    <span v-else>{{ element.description }}</span>
+                                </div>
+                                <div class="c-table__cell s-text--sm table-cell-fifteen">
+                                    <span class="primary-icon"><square-edit-outline-icon/></span>
+                                    <span class="c-tooltip info-icon">
+                                    <information-icon title="info"/>
+                                    <span role="tooltip" data-position="tooltip-left" class="large">
+                                        <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
+                                        <span v-else>Created by: {{ element.signature.createdBy }}</span>
+                                        <br/>
+                                        <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
+                                        <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
+                                    </span>
+                                </span>
+                                </div>
+                            </div>
                         </draggable>
                     </div>
                 </div>
@@ -88,6 +93,7 @@ import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
 import InformationIcon from "vue-material-design-icons/InformationVariant";
 import Draggable from "vuedraggable";
+import SuccessAlert from "../parts/success-alert";
 
 export default {
   name: "structure-elements",
@@ -95,7 +101,11 @@ export default {
   data() {
     return {
       errors: [],
-      structure: {}
+      structure: {},
+      initialElements: [],
+      orderChanged: false,
+      orderSuccessfullyChanged: false,
+      successMessage: ""
     };
   },
   computed: {
@@ -106,12 +116,47 @@ export default {
       return this.$route.params.structure_name;
     }
   },
-  components: { InformationIcon, SquareEditOutlineIcon, SettingsIcon, SimpleSidebar, ErrorAlert, Loader, CheckIcon, CloseIcon, Draggable },
+  methods: {
+    updateEnd: function() {
+      //this.orderChanged = true;
+
+      let changed = false;
+      if (this.initialElements.length === this.structure.elements.length) {
+        for (let i = 0; i < this.initialElements.length; i++) {
+          if (this.initialElements[i].sequence !== this.structure.elements[i].sequence) {
+            changed = true;
+            break;
+          }
+        }
+      }
+
+      this.orderChanged = changed;
+    },
+    draggableEnd: function() {
+      console.log("Draggable end");
+    },
+    updateOrder: function() {
+      HTTP.put("structure/update-order", this.structure)
+        .then(r => {
+          console.log("The order has changed");
+          this.structure = r.data;
+          this.orderChanged = false;
+          this.orderSuccessfullyChanged = true;
+          this.successMessage = "The order has been successfully changed.";
+        })
+        .catch(e => this.errors.push(e));
+    },
+    closeSuccess: function() {
+      this.orderSuccessfullyChanged = false;
+    }
+  },
+  components: {SuccessAlert, InformationIcon, SquareEditOutlineIcon, SettingsIcon, SimpleSidebar, ErrorAlert, Loader, CheckIcon, CloseIcon, Draggable },
   async beforeMount() {
     show();
     HTTP.get("structure/" + this.getStructureName)
       .then(r => {
         this.structure = r.data;
+        this.initialElements = this.structure.elements;
         hide();
       })
       .catch(e => {

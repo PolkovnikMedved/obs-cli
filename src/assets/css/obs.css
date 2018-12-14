@@ -188,3 +188,7 @@ main.t-content{
 span.large {
     min-width: 200px;
 }
+
+.terminal-structure{
+    background-color: rgb(255, 239, 239);
+}
