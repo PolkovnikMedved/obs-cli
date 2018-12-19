@@ -43,16 +43,11 @@
                             <span v-else>{{ element.description }}</span>
                         </div>
                         <div class="c-table__cell s-text--sm table-cell-fifteen">
-                            <span class="primary-icon"><square-edit-outline-icon/></span>
+                            <span class="primary-icon" @click="openEditModal(element)">
+                                <square-edit-outline-icon title="Edit"/>
+                            </span>
                             <span class="c-tooltip info-icon" @click="openInformationModal(element)">
                                 <information-icon title="Info"/>
-                                <!--                                    <span role="tooltip" data-position="tooltip-left" class="large">
-                                                                        <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
-                                                                        <span v-else>Created by: {{ element.signature.createdBy }}</span>
-                                                                        <br/>
-                                                                        <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
-                                                                        <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
-                                                                    </span>-->
                             </span>
                         </div>
                     </div>
@@ -76,6 +71,7 @@ import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
 import Draggable from "vuedraggable";
 import OneStructureElementModal from "./one-structure-element-modal.vue";
+import EditElementModal from "./edit-element-modal";
 
 export default {
   name: "elements-list",
@@ -84,7 +80,7 @@ export default {
       required: true
     }
   },
-  components: { InformationIcon, SquareEditOutlineIcon, CloseIcon, CheckIcon, SettingsIcon, Draggable },
+  components: {InformationIcon, SquareEditOutlineIcon, CloseIcon, CheckIcon, SettingsIcon, Draggable },
   methods: {
     updateEnd: function() {
       this.$emit("elementsReordered");
@@ -93,14 +89,10 @@ export default {
       this.$emit("reloadStructure", structure);
     },
     openInformationModal: function(element) {
-      this.$modal.show(OneStructureElementModal,
-        {
-          element: element
-        },
-        {
-          height: "auto"
-        }
-      );
+      this.$modal.show(OneStructureElementModal, { element: element }, { height: "auto" });
+    },
+    openEditModal: function(element) {
+      this.$modal.show(EditElementModal,{ element: element }, { height: "auto" })
     }
   }
 };

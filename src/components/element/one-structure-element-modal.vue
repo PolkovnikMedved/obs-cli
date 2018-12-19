@@ -103,7 +103,6 @@ import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
 
 export default {
-  //name: ["one-structure-element-modal"],
   props: ["element"],
   components: { Close, CheckIcon, CloseIcon },
   methods: {

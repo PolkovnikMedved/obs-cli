@@ -217,3 +217,8 @@ ul.breadcrumb li button:hover {
     color: #01447e;
     text-decoration: none;
 }
+
+textarea {
+    max-height: 300px;
+    padding:5px!important;
+}

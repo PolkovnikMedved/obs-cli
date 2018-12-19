@@ -100,7 +100,6 @@ export default {
       this.currentStructure = structure;
 
       // Remove all structures that are after `structure` from history
-      this.history.forEach(function(object) { console.log(object.name) });
       for (let i = 0; i < this.history.length; i++) {
         if (this.history[i].name === structure.name) {
           this.history.length = this.history.indexOf(structure) + 1;
@@ -109,25 +108,29 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    this.$modal.show("dialog", {
-      title: "Are you sure ?",
-      text: "Do you want to leave " + this.initialStructure.name + " structure ?",
-      buttons: [
-        {
-          title: "No",
-          handler: () => {
-            next(false);
-            this.$modal.hide("dialog");
+    if (this.history.length <= 1) {
+      next(true);
+    } else {
+      this.$modal.show("dialog", {
+        title: "Are you sure ?",
+        text: "Do you want to leave " + this.initialStructure.name + " structure ?",
+        buttons: [
+          {
+            title: "No",
+            handler: () => {
+              next(false);
+              this.$modal.hide("dialog");
+            }
+          },
+          {
+            title: "Yes",
+            handler: () => {
+              next(true);
+            }
           }
-        },
-        {
-          title: "Yes",
-          handler: () => {
-            next(true);
-          }
-        }
-      ]
-    });
+        ]
+      });
+    }
   },
   components: { Loader, SuccessAlert, ElementsSidebar, ElementsList, ErrorAlert },
   async beforeMount() {
