@@ -3,11 +3,12 @@
         <elements-sidebar/>
 
         <main class="t-content">
+            <v-dialog/>
             <loader v-if="visible"/>
             <error-alert :errors="errors"/>
             <success-alert :success="orderSuccessfullyChanged" :success_message="orderChangedMessage" @closeSuccess="closeSuccess"/>
 
-            <div class="l-row bottom-spaced">
+            <div class="l-row l-row--gutter">
                 <div class="l-col-6">
                     <h1>Structure <span v-if="currentStructure && currentStructure.name">{{ currentStructure.name }}</span></h1>
                 </div>
@@ -21,9 +22,12 @@
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-12">
-                    <span v-for="el of history" :key="el.name">
-                        <span>{{ el.name }}</span>
-                    </span>
+                    <ul class="breadcrumb">
+                        <li v-for="(el, index) of history" :key="el.name">
+                            <button class="c-btn" type="button" @click.prevent="backStructure(el)" v-if="(index !== (history.length-1)) && (history.length !== 1)">{{el.name}}</button>
+                            <button class="c-btn" type="button" v-else-if="(index === (history.length -1)) && (history.length !== 1)" disabled>{{ el.name }}</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -62,7 +66,7 @@ export default {
     }
   },
   methods: {
-    updateOrder: function() {
+    updateOrder: function () {
       HTTP.put("structure/update-order", this.currentStructure)
         .then(r => {
           this.currentStructure = r.data;
@@ -71,10 +75,10 @@ export default {
         })
         .catch(e => this.errors.push(e));
     },
-    closeSuccess: function() {
+    closeSuccess: function () {
       this.orderSuccessfullyChanged = false;
     },
-    elementsReordered: function() {
+    elementsReordered: function () {
       let changed = false;
       if (this.currentStructure.elements.length === this.initialElements.length) {
         for (let i = 0; i < this.initialElements.length; i++) {
@@ -86,7 +90,44 @@ export default {
       }
       this.orderChanged = changed;
     },
-    changeStructure: function() {} //TODO implement navigation inside children without changing the route
+    changeStructure: function (structure) {
+      this.history.push(structure);
+      this.currentStructure = structure;
+      this.initialElements = structure.elements;
+    },
+    backStructure: function (structure) {
+      // Set desired structure as current structure
+      this.currentStructure = structure;
+
+      // Remove all structures that are after `structure` from history
+      this.history.forEach(function(object) { console.log(object.name) });
+      for (let i = 0; i < this.history.length; i++) {
+        if (this.history[i].name === structure.name) {
+          this.history.length = this.history.indexOf(structure) + 1;
+        }
+      }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$modal.show("dialog", {
+      title: "Are you sure ?",
+      text: "Do you want to leave " + this.initialStructure.name + " structure ?",
+      buttons: [
+        {
+          title: "No",
+          handler: () => {
+            next(false);
+            this.$modal.hide("dialog");
+          }
+        },
+        {
+          title: "Yes",
+          handler: () => {
+            next(true);
+          }
+        }
+      ]
+    });
   },
   components: { Loader, SuccessAlert, ElementsSidebar, ElementsList, ErrorAlert },
   async beforeMount() {

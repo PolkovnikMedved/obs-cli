@@ -13,9 +13,6 @@
 
 <script>
 export default {
-  name: "elements-sidebar",
-  mounted() {
-    console.log("Sidebar mounted");
-  }
+  name: "elements-sidebar"
 };
 </script>

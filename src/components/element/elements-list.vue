@@ -1,6 +1,9 @@
 <template>
     <div class="l-row">
         <div class="l-col-12">
+
+            <modals-container/>
+
             <div class="c-table c-table--striped full-width nice-top">
                 <div class="c-table__thead">
                     <div class="c-table__item">
@@ -41,16 +44,16 @@
                         </div>
                         <div class="c-table__cell s-text--sm table-cell-fifteen">
                             <span class="primary-icon"><square-edit-outline-icon/></span>
-                            <span class="c-tooltip info-icon">
-                                    <information-icon title="info"/>
-                                    <span role="tooltip" data-position="tooltip-left" class="large">
-                                        <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
-                                        <span v-else>Created by: {{ element.signature.createdBy }}</span>
-                                        <br/>
-                                        <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
-                                        <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
-                                    </span>
-                                </span>
+                            <span class="c-tooltip info-icon" @click="openInformationModal(element)">
+                                <information-icon title="Info"/>
+                                <!--                                    <span role="tooltip" data-position="tooltip-left" class="large">
+                                                                        <span v-if="element && element.signature && element.signature.modifiedBy != null">Modified by: {{ element.signature.modifiedBy }}</span>
+                                                                        <span v-else>Created by: {{ element.signature.createdBy }}</span>
+                                                                        <br/>
+                                                                        <span v-if="element && element.signature && element.signature.modifiedAt != null">Modified at: {{ element.signature.modifiedAt | formatDate }}</span>
+                                                                        <span v-else>Modified at: {{ element.signature.createdAt | formatDate }}</span>
+                                                                    </span>-->
+                            </span>
                         </div>
                     </div>
                 </draggable>
@@ -72,6 +75,7 @@ import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
 import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
 import Draggable from "vuedraggable";
+import OneStructureElementModal from "./one-structure-element-modal.vue";
 
 export default {
   name: "elements-list",
@@ -85,8 +89,18 @@ export default {
     updateEnd: function() {
       this.$emit("elementsReordered");
     },
-    updateComponent: function (structureName) {
-      this.$emit("reloadStructure", structureName);
+    updateComponent: function (structure) {
+      this.$emit("reloadStructure", structure);
+    },
+    openInformationModal: function(element) {
+      this.$modal.show(OneStructureElementModal,
+        {
+          element: element
+        },
+        {
+          height: "auto"
+        }
+      );
     }
   }
 };

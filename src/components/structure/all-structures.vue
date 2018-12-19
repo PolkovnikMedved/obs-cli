@@ -122,7 +122,7 @@ import ChevronRight from "vue-material-design-icons/ChevronRight.vue";
 import Paginate from "vuejs-paginate";
 import ErrorAlert from "../parts/error-alert";
 import CopyStructureModal from "./copy-structure-modal.vue";
-import InformationIcon from "vue-material-design-icons/Information";
+import InformationIcon from "vue-material-design-icons/InformationOutline";
 
 export default {
   name: "structures",
