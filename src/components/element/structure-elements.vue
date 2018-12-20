@@ -22,12 +22,13 @@
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-12">
-                    <ul class="breadcrumb">
+                    <ul v-if="history.length !== 1" class="breadcrumb">
                         <li v-for="(el, index) of history" :key="el.name">
-                            <button class="c-btn" type="button" @click.prevent="backStructure(el)" v-if="(index !== (history.length-1)) && (history.length !== 1)">{{el.name}}</button>
-                            <button class="c-btn" type="button" v-else-if="(index === (history.length -1)) && (history.length !== 1)" disabled>{{ el.name }}</button>
+                            <button class="c-btn" type="button" @click.prevent="backStructure(el)" v-if="(index !== (history.length-1))">{{el.name}}</button>
+                            <button class="c-btn" type="button" v-else-if="(index === (history.length -1))" disabled>{{ el.name }}</button>
                         </li>
                     </ul>
+                    <span v-else>&nbsp;</span>
                 </div>
             </div>
 
@@ -141,6 +142,7 @@ export default {
         this.initialElements = this.initialStructure.elements;
         this.currentStructure = this.initialStructure;
         this.history.push(this.initialStructure);
+        console.log("Add to history: " + this.initialStructure.name);
         hide();
       })
       .catch(e => {

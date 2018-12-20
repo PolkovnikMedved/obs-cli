@@ -150,14 +150,17 @@ textarea{
 }
 
 .info-icon > span > svg {
+    cursor: pointer;
     fill: #08abc4;
 }
 
 .primary-icon > span > svg {
+    cursor: pointer;
     fill: #086cc4;
 }
 
 .warning-icon > span > svg {
+    cursor: pointer;
     fill: #e46f09;
 }
 
@@ -221,4 +224,24 @@ ul.breadcrumb li button:hover {
 textarea {
     max-height: 300px;
     padding:5px!important;
+}
+
+.add-before{
+    vertical-align: top;
+    display:inline-block;
+    background: url('../images/add_before.png') no-repeat;
+    width: 24px;
+    height: 24px;
+}
+
+.add-after{
+    vertical-align: top;
+    display:inline-block;
+    background: url('../images/add_after.png') no-repeat;
+    width: 24px;
+    height: 24px;
+}
+
+.spaced-icon{
+    margin-left: 5px;
 }

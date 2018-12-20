@@ -1,5 +1,5 @@
 <template>
-    <div class="l-row">
+    <div class="l-row l-row--gutter">
         <div class="l-col-12">
 
             <modals-container/>
@@ -20,7 +20,7 @@
                 </div>
 
                 <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody" @update="updateEnd">
-                    <div class="c-table__item" v-for="element of structure.elements" :key="element.sequence">
+                    <div class="c-table__item" v-for="(element, index) of structure.elements" :key="index">
                         <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
                         <div class="c-table__cell s-text--sm table-cell-twenty">
                             <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
@@ -46,7 +46,10 @@
                             <span class="primary-icon" @click="openEditModal(element)">
                                 <square-edit-outline-icon title="Edit"/>
                             </span>
-                            <span class="c-tooltip info-icon" @click="openInformationModal(element)">
+                            <button class="c-btn add-before spaced-icon"></button>
+                            <button class="c-btn add-after spaced-icon"></button>
+
+                            <span class="info-icon spaced-icon" @click="openInformationModal(element)">
                                 <information-icon title="Info"/>
                             </span>
                         </div>
