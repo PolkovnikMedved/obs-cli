@@ -20,19 +20,19 @@
                 </div>
             </div>
 
-            <div class="l-row l-row--gutter">
+            <div class="l-row l-row--gutter" v-if="history.length !== 1">
                 <div class="l-col-12">
-                    <ul v-if="history.length !== 1" class="breadcrumb">
+                    <ul class="breadcrumb">
                         <li v-for="(el, index) of history" :key="el.name">
                             <button class="c-btn" type="button" @click.prevent="backStructure(el)" v-if="(index !== (history.length-1))">{{el.name}}</button>
                             <button class="c-btn" type="button" v-else-if="(index === (history.length -1))" disabled>{{ el.name }}</button>
                         </li>
                     </ul>
-                    <span v-else>&nbsp;</span>
                 </div>
             </div>
 
-            <elements-list :structure="currentStructure" @elementsReordered="elementsReordered" @reloadStructure="changeStructure"/>
+<!--            <elements-list :structure="currentStructure" @elementsReordered="elementsReordered" @reloadStructure="changeStructure"/>-->
+                <elements-list :structure="currentStructure"/>
         </main>
     </div>
 </template>
@@ -43,7 +43,7 @@ import { hide, show, state } from "../tools/loader-component";
 import { HTTP } from "../../http-common";
 import SuccessAlert from "../parts/success-alert";
 import ElementsSidebar from "../parts/elements-sidebar";
-import ElementsList from "./elements-list";
+import ElementsList from "./elements-list.vue";
 import ErrorAlert from "../parts/error-alert";
 
 export default {

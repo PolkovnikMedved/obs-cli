@@ -2,7 +2,7 @@
     <div class="l-row l-row--gutter">
         <div class="l-col-12">
 
-            <modals-container/>
+           <!-- <modals-container/>-->
 
             <div class="c-table c-table--striped full-width nice-top">
                 <div class="c-table__thead">
@@ -18,84 +18,69 @@
                         </div>
                     </div>
                 </div>
-
-                <draggable v-if="structure.elements" v-model="structure.elements" class="c-table__tbody" @update="updateEnd">
-                    <div class="c-table__item" v-for="(element, index) of structure.elements" :key="index">
-                        <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
-                        <div class="c-table__cell s-text--sm table-cell-twenty">
-                            <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
-                            <span v-else-if="element.tag != null">{{ element.tag }}</span>
-                        </div>
-                        <div class="c-table__cell s-text--sm table-cell-five">
-                            <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
-                            <span v-else class="communist-button"><close-icon/></span>
-                        </div>
-                        <div class="c-table__cell s-text--sm table-cell-five">
-                            <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
-                            <span v-else class="communist-button"><close-icon/></span>
-                        </div>
-                        <div class="c-table__cell s-text--sm table-cell-twenty">
-                            <span v-if="element.typeStructure"><a @click.prevent="updateComponent(element.typeStructure)">{{ element.typeStructure.name }}</a></span>
-                            <span v-else>Terminal</span>
-                        </div>
-                        <div class="c-table__cell s-text--sm table-cell-thirty">
-                            <span v-if="element.description.length >= 50" class="c-tooltip">{{ element.description.substring(0, 50) }}...<span role="tooltip" data-position="tooltip-top">{{ element.description }}</span></span>
-                            <span v-else>{{ element.description }}</span>
-                        </div>
-                        <div class="c-table__cell s-text--sm table-cell-fifteen">
-                            <span class="primary-icon" @click="openEditModal(element)">
-                                <square-edit-outline-icon title="Edit"/>
-                            </span>
-                            <button class="c-btn add-before spaced-icon"></button>
-                            <button class="c-btn add-after spaced-icon"></button>
-
-                            <span class="info-icon spaced-icon" @click="openInformationModal(element)">
-                                <information-icon title="Info"/>
-                            </span>
-                        </div>
-                    </div>
-                </draggable>
-
-                <div v-else class="c-table__tbody">
-                    <div class="c-table__item">
-                        <div class="c-table__cell table-cell-one-hundred">We have no elements to show</div>
-                    </div>
-                </div>
             </div>
+
+            <draggable :list="children" @update="updateEnd" :options="{ draggable: '.show-element' }" class="c-table__tbody full-width">
+                <component
+                    v-for="(child, index) in children"
+                    :key="index"
+                    :is="child.component.is"
+                    v-bind="child.component.props"
+                    @addTop="addTop"
+                    @addBottom="addBottom"
+                    @remove="remove"
+                />
+            </draggable>
         </div>
     </div>
 </template>
 
 <script>
-import InformationIcon from "vue-material-design-icons/InformationVariant";
 import SettingsIcon from "vue-material-design-icons/Settings";
-import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
-import CheckIcon from "vue-material-design-icons/Check";
-import CloseIcon from "vue-material-design-icons/Close";
+import ShowOneElement from "./show-one-element.vue";
+import CreateElement from "./create-element.vue";
 import Draggable from "vuedraggable";
-import OneStructureElementModal from "./one-structure-element-modal.vue";
-import EditElementModal from "./edit-element-modal";
 
 export default {
-  name: "elements-list",
-  props: {
-    structure: {
-      required: true
+  //name: ["elements-list-new"],
+  props: ["structure"],
+  data() {
+    return {
+      children: [],
+      full: false
+    };
+  },
+  components: { ShowOneElement, CreateElement, SettingsIcon, Draggable },
+  watch: {
+    structure(val) {
+      if (val && val.elements) {
+        val.elements.forEach((el, index) => {
+          this.children.push({ component: { is: ShowOneElement, props: { element: el, index } } });
+        });
+      }
     }
   },
-  components: {InformationIcon, SquareEditOutlineIcon, CloseIcon, CheckIcon, SettingsIcon, Draggable },
   methods: {
-    updateEnd: function() {
-      this.$emit("elementsReordered");
+    updateEnd() {
+      console.log("Update end.");
     },
-    updateComponent: function (structure) {
-      this.$emit("reloadStructure", structure);
+    addTop(index) {
+      if (!this.full) {
+        this.children.splice(index, 0, { component: {is: CreateElement, props: {index}}});
+        this.full = true;
+        console.log(`Add top ${index}`);
+      }
     },
-    openInformationModal: function(element) {
-      this.$modal.show(OneStructureElementModal, { element: element }, { height: "auto" });
+    addBottom(index) {
+      if (!this.full) {
+        this.children.splice((index + 1), 0, { component: { is: CreateElement, props: { index: (index + 1) } } });
+        this.full = true;
+      }
+      console.log(`Add bottom ${index}`);
     },
-    openEditModal: function(element) {
-      this.$modal.show(EditElementModal,{ element: element }, { height: "auto" })
+    remove(index) {
+      this.children.splice(index, 1);
+      this.full = false;
     }
   }
 };
