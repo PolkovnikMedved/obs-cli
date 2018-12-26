@@ -245,3 +245,26 @@ textarea {
 .spaced-icon{
     margin-left: 5px;
 }
+
+.hidden-menu {
+    display: none;
+}
+
+.menu-opener{
+    position: fixed;
+    top:55px;
+    left:0;
+    height:25px;
+    width:25px;
+    color: #086cc4;
+}
+
+.menu-opener:hover{
+    position: fixed;
+    top:55px;
+    left:0;
+    height:25px;
+    width:25px;
+    color:white;
+    cursor: pointer;
+}

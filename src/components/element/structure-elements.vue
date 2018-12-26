@@ -1,6 +1,11 @@
 <template>
     <div class="t-body">
-        <elements-sidebar/>
+        <elements-sidebar :class="{ 'hidden-menu': !this.showMenu }"/>
+
+        <span @click="showMenuHandler" class="menu-opener">
+            <LeftArrow title="Close Menu" v-if="this.showMenu" />
+            <RightArrow title="Open Menu" v-else />
+        </span>
 
         <main class="t-content">
             <v-dialog/>
@@ -44,12 +49,15 @@ import SuccessAlert from "../parts/success-alert";
 import ElementsSidebar from "../parts/elements-sidebar";
 import ElementsList from "./elements-list.vue";
 import ErrorAlert from "../parts/error-alert";
+import LeftArrow from "vue-material-design-icons/ArrowLeft";
+import RightArrow from "vue-material-design-icons/ArrowRight";
 
 export default {
   name: "structure-elements",
   props: ["structure_name"],
   data() {
     return {
+      showMenu: true,
       initialElements: [],
       initialStructure: [],
       currentStructure: [],
@@ -66,6 +74,9 @@ export default {
     }
   },
   methods: {
+    showMenuHandler() {
+      this.showMenu = !this.showMenu;
+    },
     updateOrder: function () {
       HTTP.put("structure/update-order", this.currentStructure)
         .then(r => {
@@ -132,7 +143,7 @@ export default {
       });
     }
   },
-  components: { Loader, SuccessAlert, ElementsSidebar, ElementsList, ErrorAlert },
+  components: { Loader, SuccessAlert, ElementsSidebar, ElementsList, ErrorAlert, LeftArrow, RightArrow },
   async beforeMount() {
     show();
     HTTP.get("structure/" + this.$route.params.structure_name)
