@@ -14,7 +14,7 @@
 
       <div v-if="documents.content && documents.content.length" class="l-row l-row--gutter">
         <div class="l-col-12">
-          <div class="l-row">
+          <div class="l-row bottom-spaced-quart">
             <div class="l-col-8">
               <span class="s-text s-text--bold" style="padding-left:25px">Id - Description</span>
             </div>
@@ -23,16 +23,18 @@
             </div>
           </div>
 
-          <div v-for="(document, index) of documents.content" :key="index" class="l-row with-roof">
+          <div v-for="(document, index) of documents.content" :key="index" class="l-row with-roof bottom-spaced-quart">
             <div class="l-col-12">
 
               <div v-if="document.versions && document.versions.length" class="l-row">
-                <div class="l-col-12" @click="document.show = !document.show">
+                <div class="l-col-12">
 
                   <div class="l-row" v-bind:class="{ 'first-blue': document.show }">
                     <div class="l-col-8">
-                      <span v-if="document.show"> <chevron-up fill-color="#086cc4"/> </span>
-                      <span v-else> <chevron-down fill-color="#086cc4"/> </span>
+                      <span @click="document.show = !document.show" style="cursor:pointer;">
+                        <span v-if="document.show"><chevron-up fill-color="#086cc4"/> </span>
+                        <span v-else><chevron-down fill-color="#086cc4"/> </span>
+                      </span>
                       <span v-if="document.label.frenchLabel && document.label.frenchLabel.length <= 70">{{document.number}} - {{document.label.frenchLabel}}</span>
                       <span v-else-if="document.label.frenchLabel && document.label.frenchLabel.length > 70">{{document.number}} - <span class="c-tooltip">{{document.label.frenchLabel.substring(0, 70)}}...<span role="tooltip" data-position="tooltip-top">{{ document.label.frenchLabel }}</span></span></span>
                     </div>
@@ -78,7 +80,7 @@
                       </div>
                     </div>
 
-                    <div v-for="(version, index) of document.versions" class="l-row" :key="index"  style="padding:5px;">
+                    <div v-for="(version, index) of document.versions" class="l-row spaced-sub-row" :key="index"  style="padding:5px;">
                       <div class="l-col-1">
                         <span>{{ version.name }}</span>
                       </div>
