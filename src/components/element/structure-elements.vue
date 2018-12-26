@@ -31,8 +31,7 @@
                 </div>
             </div>
 
-<!--            <elements-list :structure="currentStructure" @elementsReordered="elementsReordered" @reloadStructure="changeStructure"/>-->
-                <elements-list :structure="currentStructure"/>
+            <elements-list :structure="currentStructure" @reloadStructure="changeStructure" @elementsReordered="elementsReordered"/>
         </main>
     </div>
 </template>
@@ -79,11 +78,11 @@ export default {
     closeSuccess: function () {
       this.orderSuccessfullyChanged = false;
     },
-    elementsReordered: function () {
+    elementsReordered: function (reorderedElements) {
       let changed = false;
-      if (this.currentStructure.elements.length === this.initialElements.length) {
+      if (this.initialElements.length === reorderedElements.length) {
         for (let i = 0; i < this.initialElements.length; i++) {
-          if (this.currentStructure.elements[i] !== this.initialElements[i]) {
+          if (this.initialElements[i] !== reorderedElements[i]) {
             changed = true;
             break;
           }
@@ -142,7 +141,6 @@ export default {
         this.initialElements = this.initialStructure.elements;
         this.currentStructure = this.initialStructure;
         this.history.push(this.initialStructure);
-        console.log("Add to history: " + this.initialStructure.name);
         hide();
       })
       .catch(e => {

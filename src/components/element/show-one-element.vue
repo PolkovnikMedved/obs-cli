@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import OneStructureElementModal from "./one-structure-element-modal.vue";
+import EditElementModal from "./edit-element-modal.vue";
 import InformationIcon from "vue-material-design-icons/InformationVariant";
 import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
 import CheckIcon from "vue-material-design-icons/Check";
@@ -46,9 +48,15 @@ export default {
   props: ["element", "index"],
   components: { CloseIcon, SquareEditOutlineIcon, CheckIcon, InformationIcon },
   methods: {
-    openInformationModal: function(el) {console.log(el);},
-    openEditModal: function(el) {console.log(el);},
-    updateComponent: function(el) {console.log(el);},
+    openInformationModal: function(el) {
+      this.$modal.show(OneStructureElementModal, { element: el }, { height: "auto" });
+    },
+    openEditModal: function(el) {
+      this.$modal.show(EditElementModal, { element: el }, { height: "auto" });
+    },
+    updateComponent: function(str) {
+      this.$emit("reloadStructure", str);
+    },
     addTop: function(index) { this.$emit("addTop", index); },
     addBottom: function(index) { this.$emit("addBottom", index);}
   }

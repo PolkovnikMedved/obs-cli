@@ -1,5 +1,5 @@
 <template>
-    <form class="c-table__item create-element" :data-index="index" style="background-color: lightcoral; margin:0;">
+    <form class="c-table__item create-element" :data-index="index" style="background-color: rgb(230,240,249); margin:0;">
         <div class="c-table__cell table-cell-five">#</div>
         <div class="c-table__cell table-cell-twenty">
             <input type="text" class="c-form__field" placeholder="tag" v-model="element.tag"/>
@@ -16,7 +16,7 @@
         <div class="c-table__cell table-cell-thirty">
             <input type="text" placeholder="description" class="c-form__field" v-model="element.description"/>
         </div>
-        <div class="c-table__cell table-cell-fifteen">
+        <div class="c-table__cell table-cell-fifteen l-justify--center">
             <button type="button" @click.prevent="send" class="c-btn c-btn--success c-btn--raised">
                 <check-icon title="Save"/>
             </button>

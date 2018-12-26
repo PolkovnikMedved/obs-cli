@@ -2,7 +2,7 @@
     <div class="l-row l-row--gutter">
         <div class="l-col-12">
 
-           <!-- <modals-container/>-->
+           <modals-container/>
 
             <div class="c-table c-table--striped full-width nice-top">
                 <div class="c-table__thead">
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <draggable :list="children" @update="updateEnd" :options="{ draggable: '.show-element' }" class="c-table__tbody full-width">
+            <draggable :list="children" @update="updateEnd" :options="{ draggable: '.show-element', disabled: this.disabled }" class="c-table__tbody full-width">
                 <component
                     v-for="(child, index) in children"
                     :key="index"
@@ -29,6 +29,7 @@
                     @addTop="addTop"
                     @addBottom="addBottom"
                     @remove="remove"
+                    @reloadStructure="reloadStructure"
                 />
             </draggable>
         </div>
@@ -54,33 +55,46 @@ export default {
   watch: {
     structure(val) {
       if (val && val.elements) {
+        this.children = [];
         val.elements.forEach((el, index) => {
           this.children.push({ component: { is: ShowOneElement, props: { element: el, index } } });
         });
       }
     }
   },
+  computed: {
+    disabled() {
+      return this.full;
+    }
+  },
   methods: {
     updateEnd() {
-      console.log("Update end.");
+      let elements = [];
+      this.children.forEach(child => {
+        elements.push(child.component.props.element);
+      });
+      this.$emit("elementsReordered", elements);
     },
     addTop(index) {
       if (!this.full) {
         this.children.splice(index, 0, { component: {is: CreateElement, props: {index}}});
         this.full = true;
-        console.log(`Add top ${index}`);
       }
     },
     addBottom(index) {
       if (!this.full) {
-        this.children.splice((index + 1), 0, { component: { is: CreateElement, props: { index: (index + 1) } } });
+        this.children.splice(index + 1, 0, {
+          component: { is: CreateElement, props: { index: index + 1 } }
+        });
         this.full = true;
       }
-      console.log(`Add bottom ${index}`);
     },
     remove(index) {
       this.children.splice(index, 1);
       this.full = false;
+    },
+    reloadStructure(str) {
+      this.$emit("reloadStructure", str);
     }
   }
 };
