@@ -8,7 +8,7 @@
 
             <div class="l-row l-row--gutter full-width">
                 <div class="l-col-12">
-                    <h1>Create a new structure</h1>
+                    <h1>Creation d'une nouvelle structure</h1>
                 </div>
             </div>
 

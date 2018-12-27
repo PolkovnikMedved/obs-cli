@@ -27,7 +27,7 @@
                     </div>
                     <div class="l-row l-row--gutter">
                         <div class="l-col-4">
-                            <span>Repetitif</span>
+                            <span>Répétitif</span>
                         </div>
                         <div class="l-col-8">
                             <span v-if="element.repetitive" class="ecolo-button"><check-icon/></span>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="l-row l-row--gutter">
                         <div class="l-col-4">
-                            <span>Created at</span>
+                            <span>Créé à</span>
                         </div>
                         <div class="l-col-8">
                             <span>{{ element.signature.createdAt | formatDate }}</span>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="l-row l-row--gutter">
                         <div class="l-col-4">
-                            <span>Created by</span>
+                            <span>Créé par</span>
                         </div>
                         <div class="l-col-8">
                             <span>{{ element.signature.createdBy }}</span>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="l-row l-row--gutter">
                         <div class="l-col-4">
-                            <span>Last modified at</span>
+                            <span>Modifié à</span>
                         </div>
                         <div class="l-col-8">
                             <span>{{ element.signature.modifiedAt | formatDate }}</span>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="l-row l-row--gutter">
                         <div class="l-col-4">
-                            <span>Last modified by</span>
+                            <span>Modifié par</span>
                         </div>
                         <div class="l-col-8">
                             <span>{{ element.signature.modifiedBy }}</span>

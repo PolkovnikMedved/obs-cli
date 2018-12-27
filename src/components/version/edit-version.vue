@@ -4,6 +4,7 @@
     <main class="t-content">
       <success-alert @closeSuccess="closeSuccess" :success="updated" :success_message="successMessage" />
       <error-alert :errors="errors" />
+      <loader v-if="visible"></loader>
 
       <div v-if="version && version.document && version.document.label" class="l-row l-row--gutter" >
         <div class="l-col">
@@ -22,20 +23,18 @@
 
       <div class="l-row l-row--gutter">
         <div class="l-col-6">
-          <form class="c-form full-width" @submit.prevent="updateVersion">
+          <form class="c-form full-width" @submit.prevent="prepareUpdate">
             <div class="l-row">
               <fieldset class="c-form__fieldset c-form__fieldset--border">
                 <legend class="c-form__legend">Remplissez le formulaire</legend>
 
                 <div class="l-row">
-                  <div class="l-col-3 l-justify--end nice-right">
+                  <div class="l-col-4 l-justify--end nice-right">
                     <div class="c-form__field-group">
-                      <label for="id" class="c-form__label spaced"
-                        >Version Name</label
-                      >
+                      <label for="id" class="c-form__label spaced">Nom de la version</label>
                     </div>
                   </div>
-                  <div class="l-col-7">
+                  <div class="l-col-8">
                     <div class="c-form__field-group full-width">
                       <input
                         id="id"
@@ -50,15 +49,12 @@
                 </div>
 
                 <div class="l-row nice-top">
-                  <div class="l-col-3 l-justify--end nice-right">
+                  <div class="l-col-4 l-justify--end nice-right">
                     <div class="c-form__field-group">
-                      <label for="description" class="c-form__label spaced"
-                        >Description
-                        <span class="s-text s-text--danger">* </span></label
-                      >
+                      <label for="description" class="c-form__label spaced">Description<span class="s-text s-text--danger">* </span></label>
                     </div>
                   </div>
-                  <div class="l-col-7">
+                  <div class="l-col-8">
                     <div class="c-form__field-group full-width">
                       <textarea
                         rows="5"
@@ -72,15 +68,29 @@
                   </div>
                 </div>
 
-                <div class="l-row nice-top">
-                  <div class="l-col-3 l-justify--end nice-right">
+                <div class="l-row">
+                  <div class="l-col-4 l-justify--end nice-right">
                     <div class="c-form__field-group">
-                      <label for="dfa" class="c-form__label spaced"
-                        >N° DFA</label
-                      >
+                      <label for="type" class="c-form__label spaced">Type</label>
                     </div>
                   </div>
-                  <div class="l-col-7">
+
+                  <div class="l-col-8">
+                    <div class="c-form__field-group full-width">
+                      <select class="c-form__field spaced full-width" id="type" v-if="structures && structures.length" v-model="version.structure.name">
+                        <option v-for="structure of structures" :key="structure">{{ structure }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="l-row nice-top">
+                  <div class="l-col-4 l-justify--end nice-right">
+                    <div class="c-form__field-group">
+                      <label for="dfa" class="c-form__label spaced">N° DFA</label>
+                    </div>
+                  </div>
+                  <div class="l-col-8">
                     <div class="c-form__field-group full-width">
                       <input
                         id="dfa"
@@ -96,11 +106,8 @@
             </div>
 
             <div class="l-row nice-top">
-              <div class="l-col-offset-3 l-col-7">
-                <button
-                  class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced"
-                  type="submit"
-                >
+              <div class="l-col-offset-4 l-col-8">
+                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit" >
                   Soumettre
                 </button>
               </div>
@@ -117,12 +124,15 @@ import { HTTP } from "../../http-common";
 import SimpleSidebar from "./../parts/simple-sidebar.vue";
 import ErrorAlert from "../parts/error-alert";
 import SuccessAlert from "../parts/success-alert";
+import { state, show, hide } from "../tools/loader-component";
+import Loader from "../tools/loader.vue";
 
 export default {
   name: "edit-version",
   props: ["version_id"],
   data() {
     return {
+      structures: [],
       version: {
         name: "",
         description: "",
@@ -133,12 +143,51 @@ export default {
       successMessage: "La version à bien été mise à jour."
     };
   },
-  computed: {},
+  computed: {
+    visible() {
+      return state.visible;
+    }
+  },
   methods: {
-    updateVersion: function() {
+    getAllStructures() {
+      HTTP.get("/structure/all-names")
+        .then(r => {
+          this.structures = r.data;
+        })
+        .catch(e => {
+          this.errors.push(e);
+        });
+    },
+    prepareUpdate() {
+      show();
       this.errors = [];
       this.updated = false;
-      HTTP.put("/version/update", this.version)
+
+      if ( typeof this.version.structure === "object") {
+        console.log("Structure is an object");
+        this.updateVersion(this.version);
+        hide();
+      } else if ( typeof this.version.structure === "string") {
+        console.log("Structure is a string");
+        HTTP.get("/structure/" + this.version.structure)
+          .then(r => {
+            this.version.structure = r.data;
+            this.updateVersion(this.version);
+          })
+          .catch(e => {
+            this.errors.push(e);
+          })
+          .finally(() => hide());
+      } else {
+        console.log("Structure " + this.version.structure);
+      }
+
+     if (this.visible) { hide(); }
+    },
+    updateVersion(v) {
+      //this.errors = [];
+      //this.updated = false;
+      HTTP.put("/version/update", JSON.stringify(v), { headers: {'Content-Type': 'application/json'}})
         .then(r => {
           this.version = r.data;
           this.updated = true;
@@ -151,16 +200,23 @@ export default {
       this.updated = false;
     }
   },
-  components: { SuccessAlert, ErrorAlert, SimpleSidebar },
+  components: { SuccessAlert, ErrorAlert, SimpleSidebar, Loader },
   async beforeMount() {
+    show();
     let versionId = this.$route.params.version_id;
     HTTP.get("/version/" + versionId)
       .then(r => {
         this.version = r.data;
-        console.log("Version: " + JSON.stringify(this.version));
+        this.getAllStructures();
       })
       .catch(e => {
         this.errors.push(e);
+      })
+      .finally(() => {
+        if (this.version.structure == null) {
+          this.version.structure = { name: "" };
+        }
+        hide();
       });
   }
 };

@@ -4,40 +4,40 @@
       <error-alert :errors="errors" />
 
       <div class="l-row l-row--gutter">
-        <div class="l-col-offset-4 l-col-4 l-justify--center">
+        <div class="l-col-offset-3 l-col-6 l-justify--center">
           <h1>{{ hello }}</h1>
           <form action="" class="c-form c-form--block full-width">
             <div class="l-row ">
               <div class="l-col-4 l-justify--end">
                 <div class="c-form__field-group">
-                  <label for="username-1" class="c-form__label spaced">Username<span class="c-form__required">*</span></label>
+                  <label for="username-1" class="c-form__label spaced">Pseudonyme<span class="c-form__required">*</span></label>
                 </div>
               </div>
 
-              <div class="l-col-8">
-                <div class="c-form__field-group">
-                  <input id="username-1" class="c-form__field" type="text" name="username" autocomplete="off">
+              <div class="l-col-4">
+                <div class="c-form__field-group full-width">
+                  <input id="username-1" class="c-form__field full-width" type="text" name="username" autocomplete="off">
                 </div>
               </div>
             </div>
             <div class="l-row ">
               <div class="l-col-4 l-justify--end">
                 <div class="c-form__field-group">
-                  <label for="password-1" class="c-form__label spaced">Password<span class="c-form__required">*</span></label>
+                  <label for="password-1" class="c-form__label spaced">Mot de passe<span class="c-form__required">*</span></label>
                 </div>
               </div>
 
-              <div class="l-col-8">
-                <div class="c-form__field-group">
-                  <input id="password-1" class="c-form__field" type="password" name="password" autocomplete="off">
+              <div class="l-col-4">
+                <div class="c-form__field-group full-width">
+                  <input id="password-1" class="c-form__field full-width" type="password" name="password" autocomplete="off">
                 </div>
               </div>
             </div>
 
             <div class="l-row">
-              <div class="l-col-offset-4 l-col-8">
-                <div class="c-form__field-group">
-                  <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button spaced-no-left" type="submit">Sign in</router-link>
+              <div class="l-col-offset-4 l-col-4">
+                <div class="c-form__field-group full-width">
+                  <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button s-text--center" type="submit" style="margin-top:5px">Sign in</router-link>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default {
   name: "welcome",
   data() {
     return {
-      hello: "Welcome to Observatory!",
+      hello: "Bienvenue dans l'observatoire 3.0!",
       serverMessage: "",
       errors: []
     };

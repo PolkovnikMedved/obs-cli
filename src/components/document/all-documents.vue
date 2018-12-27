@@ -3,13 +3,13 @@
     <documents-search @filter="filter" @reset="reset" />
     <main class="t-content">
       <copy-version-modal :version_id="versionToCopy" :document_id="documentToCopy" @reload="closedModal" />
-
       <error-alert :errors="errors" />
-
       <loader v-if="visible"></loader>
+      <success-alert :success="success" :success_message="successMessage" @closeSuccess="closeSuccess"/>
+      <v-dialog />
 
       <div class="l-row l-row--gutter">
-        <div class="l-col"><h1>Document versions management</h1></div>
+        <div class="l-col"><h1>Gestion des versions</h1></div>
       </div>
 
       <div v-if="documents.content && documents.content.length" class="l-row l-row--gutter">
@@ -19,7 +19,7 @@
               <span class="s-text s-text--bold" style="padding-left:25px">Id - Description</span>
             </div>
             <div class="l-col-3">
-              <span class="s-text s-text--bold">Category</span>
+              <span class="s-text s-text--bold">Catégorie</span>
             </div>
           </div>
 
@@ -117,12 +117,16 @@
 
                       <div class="l-col-1">
                         <router-link :to="{ name: 'edit-version', params: { version_id: version.name } }" class="primary-icon">
-                          <square-edit-outline title="Edit version" />
+                          <square-edit-outline title="Mettre à jour" />
                         </router-link>
                         &nbsp;
-                        <a :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="warning-icon">
-                          <content-copy fill-color="#086cc4" />
-                        </a>
+                        <span :data-version="version.name" :data-document="document.number" @click.prevent="copyVersion($event)" class="warning-icon">
+                          <content-copy title="Copier" fill-color="#086cc4" />
+                        </span>
+                        &nbsp;
+                        <span class="communist-button" @click="removeVersion(version, document)">
+                          <trash-icon title="Supprimer" class="icon" />
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -191,8 +195,10 @@ import PlusIcon from "vue-material-design-icons/Plus";
 import Settings from "vue-material-design-icons/Settings";
 import SquareEditOutline from "vue-material-design-icons/SquareEditOutline";
 import ContentCopy from "vue-material-design-icons/ContentCopy";
-import CopyVersionModal from "../version/copy-version-modal.vue"
+import CopyVersionModal from "../version/copy-version-modal.vue";
 import ErrorAlert from "../parts/error-alert";
+import TrashIcon from "vue-material-design-icons/TrashCanOutline";
+import SuccessAlert from "../parts/success-alert";
 
 export default {
   name: "versions",
@@ -204,7 +210,9 @@ export default {
       search: { documentNumber: "", documentName: "", documentCategory: "", createdBy: "", modifiedBy: "" },
       documentVersion: "0",
       versionToCopy: "",
-      documentToCopy: ""
+      documentToCopy: "",
+      success: false,
+      successMessage: "La version a bien été supprimée"
     };
   },
   computed: {
@@ -217,6 +225,9 @@ export default {
   },
   /* We should pay attention to pagination. Sometimes page 1 = 0, sometimes page 1 = 1, should be refactored before I'm retired.... */
   methods: {
+    closeSuccess() {
+      this.success = false;
+    },
     closedModal: function() {
       this.reset();
     },
@@ -257,9 +268,56 @@ export default {
       this.versionToCopy = element.getAttribute("data-version");
       this.documentToCopy = element.getAttribute("data-document");
       this.$modal.show("copy-version-modal");
+    },
+    updateDocument(document) {
+      HTTP.put("/document/update", JSON.stringify(document), {headers: {'Content-Type': 'application/json'}})
+        .then(() => {
+          this.success = true;
+        })
+        .catch(e => this.errors.push(e));
+    },
+    removeVersion(version, document) {
+      HTTP.get("/version/used?name=" + version.name)
+        .then(r => {
+          let message = "";
+          if (r.data === true) {
+            message = "La version est utilisée ailleurs. Etes-vous sûr de la supprimer du document N°" + document.number;
+          } else {
+            message = "La version n'est pas utilisée ailleurs. Etes-vous sûr de la supprimer définitivement ?";
+          }
+          this.$modal.show("dialog", {
+            title: "Soyez sûrs !",
+            text: message,
+            buttons: [
+              {
+                title: "No",
+                handler: () => {
+                  this.$modal.hide("dialog");
+                }
+              },
+              {
+                title: "Yes",
+                handler: () => {
+                  for (var i = 0; i < document.versions.length; i++) {
+                    if (document.versions[i].name === version.name) {
+                      document.versions.splice(i, 1);
+                    }
+                  }
+                  this.updateDocument(document);
+                  console.log("Crazy man !");
+                  this.$modal.hide("dialog");
+                }
+              }
+            ]
+          });
+        })
+        .catch(e => {
+          this.errors.push(e);
+        });
     }
   },
   components: {
+      SuccessAlert,
     ErrorAlert,
     DocumentsSearch,
     Loader,
@@ -272,7 +330,8 @@ export default {
     Settings,
     SquareEditOutline,
     ContentCopy,
-    CopyVersionModal
+    CopyVersionModal,
+    TrashIcon
   },
   async beforeMount() {
     this.getDocuments(0);

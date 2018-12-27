@@ -3,7 +3,7 @@
         <div class="c-modal-custom">
             <div class="c-modal__box">
                 <div class="c-modal__header">
-                    <h1>Copy structure N°{{ structure_name }}</h1>
+                    <h1>Copie de la structure N°{{ structure_name }}</h1>
                     <button class="c-btn communist-button" type="button" @click="$modal.hide('copy-structure-modal')">
                         <close title="Close"/>
                     </button>
@@ -13,7 +13,7 @@
                     <error-alert :errors="errors"/>
                     <success-alert @closeSuccess="closeSuccess" :success="success" :success_message="this.successMessage"/>
                     <div style="margin:10px;">
-                        <h3>Origin</h3>
+                        <h3>Origine</h3>
                         <p>Structure: {{ structure_name }}</p>
 
                         <br/>
@@ -25,12 +25,12 @@
                         <div class="l-row">
                             <fieldset class="c-form__fieldset c-form__fieldset--border">
 
-                                <legend class="c-form__legend">Enter a name for the new structure</legend>
+                                <legend class="c-form__legend">Entrez le nom de la nouvelle structure</legend>
 
                                 <div class="l-row">
                                     <div class="l-col-3 l-justify--end nice-right">
                                         <div class="c-form__field-group">
-                                            <label for="id" class="c-form__label spaced">New structure name <span class="s-text--warning s-text--bold">*</span></label>
+                                            <label for="id" class="c-form__label spaced">Nom <span class="s-text--warning s-text--bold">*</span></label>
                                         </div>
                                     </div>
 
@@ -45,7 +45,7 @@
 
                         <div class="l-row">
                             <div class="l-col-offset-3 l-col-5">
-                                <button class="c-btn c-btn--success c-btn--raised s-text--center spaced full-width">Submit</button>
+                                <button class="c-btn c-btn--success c-btn--raised s-text--center spaced full-width">Soumettre</button>
                             </div>
                         </div>
                     </form>

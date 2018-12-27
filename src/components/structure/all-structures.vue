@@ -9,7 +9,7 @@
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-11">
-                    <h1>Structures management</h1>
+                    <h1>Gestion des structures</h1>
                 </div>
                 <div class="l-col-1">
                     <router-link :to="{ name: 'add-structure' }" class="top-right-add">
