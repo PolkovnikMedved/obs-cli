@@ -1,6 +1,10 @@
 <template>
   <div class="t-body">
-    <documents-search @filter="filter" @reset="reset" />
+    <documents-search @filter="filter" @reset="reset" :class="{ 'hidden-menu': !this.showMenu }" />
+    <span @click="showMenuHandler" class="menu-opener">
+      <LeftArrow title="Close Menu" v-if="this.showMenu" />
+      <RightArrow title="Open Menu" v-else />
+    </span>
     <main class="t-content">
       <copy-version-modal :version_id="versionToCopy" :document_id="documentToCopy" @reload="closedModal" />
       <error-alert :errors="errors" />
@@ -199,6 +203,8 @@ import CopyVersionModal from "../version/copy-version-modal.vue";
 import ErrorAlert from "../parts/error-alert";
 import TrashIcon from "vue-material-design-icons/TrashCanOutline";
 import SuccessAlert from "../parts/success-alert";
+import LeftArrow from "vue-material-design-icons/ArrowLeft";
+import RightArrow from "vue-material-design-icons/ArrowRight";
 
 export default {
   name: "versions",
@@ -212,7 +218,8 @@ export default {
       versionToCopy: "",
       documentToCopy: "",
       success: false,
-      successMessage: "La version a bien été supprimée"
+      successMessage: "La version a bien été supprimée",
+      showMenu: true
     };
   },
   computed: {
@@ -225,6 +232,9 @@ export default {
   },
   /* We should pay attention to pagination. Sometimes page 1 = 0, sometimes page 1 = 1, should be refactored before I'm retired.... */
   methods: {
+    showMenuHandler() {
+      this.showMenu = !this.showMenu;
+    },
     closeSuccess() {
       this.success = false;
     },
@@ -317,7 +327,7 @@ export default {
     }
   },
   components: {
-      SuccessAlert,
+    SuccessAlert,
     ErrorAlert,
     DocumentsSearch,
     Loader,
@@ -331,7 +341,9 @@ export default {
     SquareEditOutline,
     ContentCopy,
     CopyVersionModal,
-    TrashIcon
+    TrashIcon,
+    LeftArrow,
+    RightArrow
   },
   async beforeMount() {
     this.getDocuments(0);

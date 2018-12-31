@@ -167,7 +167,7 @@ export default {
     },
     getStructures: function(pageNum) {
       show();
-      let url = "structure/all?name="+this.search.structureName+"&tag="+this.search.structureTag+"&description="+this.search.structureDescription+"&createdBy="+this.search.createdBy+"&modifiedBy="+this.search.modifiedBy+"&page=" + pageNum;
+      let url = "/structure/all?name="+this.search.structureName+"&tag="+this.search.structureTag+"&description="+this.search.structureDescription+"&createdBy="+this.search.createdBy+"&modifiedBy="+this.search.modifiedBy+"&page=" + pageNum;
       HTTP.get(url)
         .then(r => {
           this.structures = r.data;

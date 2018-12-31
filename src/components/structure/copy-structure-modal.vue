@@ -76,7 +76,7 @@ export default {
         createCopy: function () {
             if(this.structure_name !== this.newStructureName) {
                 HTTP.get("/structure/copy?from=" + this.structure_name + "&to=" + this.newStructureName)
-                    .then(this.success = true)
+                    .then(() => this.success = true)
                     .catch(e => this.errors.push(e));
             }
         },
