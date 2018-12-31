@@ -287,43 +287,31 @@ export default {
         .catch(e => this.errors.push(e));
     },
     removeVersion(version, document) {
-      HTTP.get("/version/used?name=" + version.name)
-        .then(r => {
-          let message = "";
-          if (r.data === true) {
-            message = "La version est utilisée ailleurs. Etes-vous sûr de la supprimer du document N°" + document.number;
-          } else {
-            message = "La version n'est pas utilisée ailleurs. Etes-vous sûr de la supprimer définitivement ?";
-          }
-          this.$modal.show("dialog", {
-            title: "Soyez sûrs !",
-            text: message,
-            buttons: [
-              {
-                title: "No",
-                handler: () => {
-                  this.$modal.hide("dialog");
-                }
-              },
-              {
-                title: "Yes",
-                handler: () => {
-                  for (var i = 0; i < document.versions.length; i++) {
-                    if (document.versions[i].name === version.name) {
-                      document.versions.splice(i, 1);
-                    }
-                  }
-                  this.updateDocument(document);
-                  console.log("Crazy man !");
-                  this.$modal.hide("dialog");
+      this.$modal.show("dialog", {
+        title: "Soyez sûrs !",
+        text: "Êtes-vous sûr de vouloir supprimer la version " + version.name + " du document ´´" + document.label.frenchLabel +"´´ ?",
+        buttons: [
+          {
+            title: "Non",
+            handler: () => {
+              this.$modal.hide("dialog");
+            }
+          },
+          {
+            title: "Oui",
+            handler: () => {
+              for (var i = 0; i < document.versions.length; i++) {
+                if (document.versions[i].name === version.name) {
+                  document.versions.splice(i, 1);
                 }
               }
-            ]
-          });
-        })
-        .catch(e => {
-          this.errors.push(e);
-        });
+              this.updateDocument(document);
+              console.log("Crazy man !");
+              this.$modal.hide("dialog");
+            }
+          }
+        ]
+      });
     }
   },
   components: {
