@@ -43,7 +43,6 @@ import CreateElement from "./create-element.vue";
 import Draggable from "vuedraggable";
 
 export default {
-  //name: ["elements-list-new"],
   props: ["structure"],
   data() {
     return {
@@ -54,11 +53,20 @@ export default {
   components: { ShowOneElement, CreateElement, SettingsIcon, Draggable },
   watch: {
     structure(val) {
-      if (val && val.elements) {
+      if (val && val.elements && val.elements.length > 0)
+      {
         this.children = [];
         val.elements.forEach((el, index) => {
           this.children.push({ component: { is: ShowOneElement, props: { element: el, index } } });
         });
+      } else if (val && val.elements && val.elements.length === 0)
+      {
+        this.children = [];
+        this.children.push({ component: { is: CreateElement, props: { index: 0 } } });
+      } else {
+        console.log(
+          "Une erreur inconnue s'est produite. Structure = " + this.structure
+        );
       }
     }
   },
@@ -90,8 +98,10 @@ export default {
       }
     },
     remove(index) {
-      this.children.splice(index, 1);
-      this.full = false;
+      if (this.children.length > 1) {
+        this.children.splice(index, 1);
+        this.full = false;
+      }
     },
     reloadStructure(str) {
       this.$emit("reloadStructure", str);
