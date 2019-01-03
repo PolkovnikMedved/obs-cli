@@ -5,7 +5,9 @@
         <main class="t-content">
             <copy-structure-modal :structure_name="structureToCopy" @reload="closeModal"/>
             <error-alert :errors="errors" />
+            <success-alert :success="success" :success_message="successMessage" @closeSuccess="closeSuccess"/>
             <loader v-if="visible"></loader>
+            <v-dialog/>
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-11">
@@ -13,7 +15,7 @@
                 </div>
                 <div class="l-col-1">
                     <router-link :to="{ name: 'add-structure' }" class="top-right-add">
-                        <plus-circle-icon fill-color="#07b358" title="Add structure"/>
+                        <plus-circle-icon fill-color="#07b358" title="Ajouter une structure"/>
                     </router-link>
                 </div>
             </div>
@@ -52,12 +54,12 @@
                                         </td>
                                         <td class="c-table__cell table-cell-fifteen">
                                             <router-link :to="{ name: 'edit-structure', params: { structure_name: structure.name } }">
-                                                <span class="primary-icon"><square-edit-outline-icon title="Edit structure"/></span>
+                                                <span class="primary-icon"><square-edit-outline-icon title="Editer"/></span>
                                             </router-link>
                                             &nbsp;
                                             <a :data-structure="structure.name" @click.prevent="copyStructure($event)">
                                                 <span class="warning-icon">
-                                                    <content-copy-icon title="Copy structure"/>
+                                                    <content-copy-icon title="Copier"/>
                                                 </span>
                                             </a>
                                             &nbsp;
@@ -70,6 +72,10 @@
                                                     <span v-if="structure && structure.signature && structure.signature.modifiedAt != null">Modified at: {{ structure.signature.modifiedAt | formatDate }}</span>
                                                     <span v-else>Modified at: {{ structure.signature.createdAt | formatDate }}</span>
                                                 </span>
+                                            </span>
+                                            &nbsp;
+                                            <span class="communist-button" @click="removeStructure(structure.name)">
+                                                <trash-can-outline-icon title="Supprimer"/>
                                             </span>
                                         </td>
                                     </tr>
@@ -123,6 +129,8 @@ import Paginate from "vuejs-paginate";
 import ErrorAlert from "../parts/error-alert";
 import CopyStructureModal from "./copy-structure-modal.vue";
 import InformationIcon from "vue-material-design-icons/InformationOutline";
+import TrashCanOutlineIcon from "vue-material-design-icons/TrashCanOutline";
+import SuccessAlert from "../parts/success-alert";
 
 export default {
   name: "structures",
@@ -132,7 +140,9 @@ export default {
       errors: [],
       structures: [],
       search: { structureName: "", structureTag: "", structureDescription: "", createdBy: "", modifiedBy: "" },
-      structureToCopy: ""
+      structureToCopy: "",
+      success: false,
+      successMessage: ""
     };
   },
   computed: {
@@ -144,6 +154,8 @@ export default {
     }
   },
   components: {
+    SuccessAlert,
+    TrashCanOutlineIcon,
     InformationIcon,
     ErrorAlert,
     ContentCopyIcon,
@@ -158,6 +170,49 @@ export default {
     CopyStructureModal
   },
   methods: {
+    closeSuccess() {
+      this.success = false;
+    },
+    removeStructure(name) {
+      HTTP.get("/structure/is-used?name=" + name)
+        .then(r => {
+          if (r.data === true) {
+            this.$modal.show("dialog", {
+              title: "Impossible de supprimer",
+              text: "Cette structure est encore utilisée ailleurs.",
+              buttons: [ { title: "OK", handler: () => this.$modal.hide("dialog") } ]
+            });
+          } else {
+            this.$modal.show("dialog", {
+              title: "Etes-vous sûr ?",
+              text: "Cette structure va être supprimée. Voulez-vous continuer ?",
+              buttons: [
+                {
+                  title: "Non",
+                  handler: () => this.$modal.hide("dialog")
+                },
+                {
+                  title: "Oui",
+                  handler: () => {
+                    HTTP.delete("/structure/delete?name=" + name)
+                      .then(() => {
+                        this.successMessage = "La structure a bien été supprimée.";
+                        this.success = true;
+                        // Remove the element from the current list
+                        this.structures.content = this.structures.content.filter(
+                          structure => structure.name !== name
+                        );
+                      })
+                      .catch(e => this.errors.push(e))
+                      .finally(() => this.$modal.hide("dialog"));
+                  }
+                }
+              ]
+            });
+          }
+        })
+        .catch(e => this.errors.push(e));
+    },
     closeModal: function() {
       this.reset();
     },

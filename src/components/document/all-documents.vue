@@ -36,8 +36,8 @@
                   <div class="l-row" v-bind:class="{ 'first-blue': document.show }">
                     <div class="l-col-8">
                       <span @click="document.show = !document.show" style="cursor:pointer;">
-                        <span v-if="document.show"><chevron-up fill-color="#086cc4"/> </span>
-                        <span v-else><chevron-down fill-color="#086cc4"/> </span>
+                        <span v-if="document.show"><chevron-up fill-color="#086cc4" title="Cacher les versions"/> </span>
+                        <span v-else><chevron-down fill-color="#086cc4" title="Voir les versions"/> </span>
                       </span>
                       <span v-if="document.label.frenchLabel && document.label.frenchLabel.length <= 70">{{document.number}} - {{document.label.frenchLabel}}</span>
                       <span v-else-if="document.label.frenchLabel && document.label.frenchLabel.length > 70">{{document.number}} - <span class="c-tooltip">{{document.label.frenchLabel.substring(0, 70)}}...<span role="tooltip" data-position="tooltip-top">{{ document.label.frenchLabel }}</span></span></span>
@@ -48,7 +48,7 @@
                     <div class="l-col-1">
                       <span>
                         <router-link :to="{ name: 'add-version', params: { doc_id: document.number } }">
-                          <plus-icon fill-color="#07b358" name="add" />
+                          <plus-icon fill-color="#07b358" title="Ajouter une version" />
                         </router-link>
                       </span>
                     </div>
@@ -139,7 +139,7 @@
 
               <div v-else class="l-row">
                 <div class="l-col-8">
-                  <span><chevron-down fill-color="#5a6772" text-fill="closed"/></span>
+                  <span><chevron-down fill-color="#5a6772" text-fill="closed" title="Pas de versions pour ce document"/></span>
                   <span v-if="document.label.frenchLabel && document.label.frenchLabel.length <= 70">{{document.number}} - {{document.label.frenchLabel}}</span>
                   <span v-else-if="document.label.frenchLabel && document.label.frenchLabel.length > 70">{{document.number}} - <span class="c-tooltip">{{document.label.frenchLabel.substring(0, 70)}}...<span role="tooltip" data-position="tooltip-top">{{ document.label.frenchLabel }}</span></span></span>
                 </div>
@@ -167,8 +167,8 @@
                     :page-link-class="'c-list-item'"
                     :active-class="'c-list-item--is-active'"
                     :click-handler="pageCallback">
-                  <span class="wide-icon" slot="prevContent"> <chevron-left name="previous" fill-color="#086cc4" /> </span>
-                  <span class="wide-icon" slot="nextContent"> <chevron-right name="next" fill-color="#086cc4" /> </span>
+                  <span class="wide-icon" slot="prevContent"> <chevron-left name="previous" fill-color="#086cc4" title="Précédent"/> </span>
+                  <span class="wide-icon" slot="nextContent"> <chevron-right name="next" fill-color="#086cc4" title="Suivant"/> </span>
                 </paginate>
               </nav>
             </div>
