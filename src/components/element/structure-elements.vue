@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <elements-list :structure="currentStructure" @reloadStructure="changeStructure" @elementsReordered="elementsReordered"/>
+            <elements-list :structure="currentStructure" @reloadStructure="changeStructure" @elementsReordered="elementsReordered" @updateStructure="updateCurrentStructure"/>
         </main>
     </div>
 </template>
@@ -76,6 +76,11 @@ export default {
   methods: {
     showMenuHandler() {
       this.showMenu = !this.showMenu;
+    },
+    updateCurrentStructure(structure) {
+      HTTP.put("/structure/update", JSON.stringify(structure), { headers: {"Content-Type": "application/json"} })
+        .then(r => (this.currentStructure = r.data))
+        .catch(e => this.errors.push(e));
     },
     updateOrder: function () {
       HTTP.put("structure/update-order", this.currentStructure)

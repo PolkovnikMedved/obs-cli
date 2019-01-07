@@ -30,6 +30,7 @@
                     @addBottom="addBottom"
                     @remove="remove"
                     @reloadStructure="reloadStructure"
+                    @create="create"
                 />
             </draggable>
         </div>
@@ -53,6 +54,7 @@ export default {
   components: { ShowOneElement, CreateElement, SettingsIcon, Draggable },
   watch: {
     structure(val) {
+      console.log("Call to watcher");
       if (val && val.elements && val.elements.length > 0)
       {
         this.children = [];
@@ -62,7 +64,7 @@ export default {
       } else if (val && val.elements && val.elements.length === 0)
       {
         this.children = [];
-        this.children.push({ component: { is: CreateElement, props: { index: 0 } } });
+        this.children.push({ component: { is: CreateElement, props: { index: 0, structure: this.structure } } });
       } else {
         console.log(
           "Une erreur inconnue s'est produite. Structure = " + this.structure
@@ -85,7 +87,7 @@ export default {
     },
     addTop(index) {
       if (!this.full) {
-        this.children.splice(index, 0, { component: {is: CreateElement, props: {index}}});
+        this.children.splice(index, 0, { component: {is: CreateElement, props: {index, structure: this.structure}}});
         this.full = true;
       }
     },
@@ -105,6 +107,11 @@ export default {
     },
     reloadStructure(str) {
       this.$emit("reloadStructure", str);
+    },
+    create(index, element) {
+      this.structure.elements.splice(index, 0, element);
+      console.log("Elements = " + this.structure.elements.length);
+      this.$emit("updateStructure", this.structure);
     }
   }
 };
