@@ -55,14 +55,18 @@ export default {
   watch: {
     structure(val) {
       console.log("Call to watcher");
-      if (val && val.elements && val.elements.length > 0)
-      {
+      if (val && val.elements && val.elements.length > 0) {
+        // Structure with elements
         this.children = [];
+        // Sort the elements by sequence
+        val.elements.sort(function(a, b) {
+          return a.sequence - b.sequence;
+        });
         val.elements.forEach((el, index) => {
           this.children.push({ component: { is: ShowOneElement, props: { element: el, index } } });
         });
-      } else if (val && val.elements && val.elements.length === 0)
-      {
+      } else if (val && val.elements && val.elements.length === 0) {
+        // Structure without elements => show create element component
         this.children = [];
         this.children.push({ component: { is: CreateElement, props: { index: 0, structure: this.structure } } });
       } else {

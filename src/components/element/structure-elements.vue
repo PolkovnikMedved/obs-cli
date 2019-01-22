@@ -11,7 +11,7 @@
             <v-dialog/>
             <loader v-if="visible"/>
             <error-alert :errors="errors"/>
-            <success-alert :success="orderSuccessfullyChanged" :success_message="orderChangedMessage" @closeSuccess="closeSuccess"/>
+            <success-alert :success="success" :success_message="successMessage" @closeSuccess="closeSuccess"/>
 
             <div class="l-row l-row--gutter">
                 <div class="l-col-6">
@@ -64,8 +64,8 @@ export default {
       errors: [],
       history: [],
       orderChanged: false,
-      orderSuccessfullyChanged: false,
-      orderChangedMessage: "The order has been successfully changed"
+      success: false,
+      successMessage: "The order has been successfully changed"
     };
   },
   computed: {
@@ -79,7 +79,11 @@ export default {
     },
     updateCurrentStructure(structure) {
       HTTP.put("/structure/update", JSON.stringify(structure), { headers: {"Content-Type": "application/json"} })
-        .then(r => (this.currentStructure = r.data))
+        .then(r => {
+          this.currentStructure = r.data;
+          this.successMessage = "L'élement de structure a bien été créé";
+          this.success = true;
+        })
         .catch(e => this.errors.push(e));
     },
     updateOrder: function () {
@@ -87,12 +91,13 @@ export default {
         .then(r => {
           this.currentStructure = r.data;
           this.orderChanged = false;
-          this.orderSuccessfullyChanged = true;
+          this.successMessage = "L'ordre des éléments a bien été mis à jour.";
+          this.success = true;
         })
         .catch(e => this.errors.push(e));
     },
     closeSuccess: function () {
-      this.orderSuccessfullyChanged = false;
+      this.success = false;
     },
     elementsReordered: function (reorderedElements) {
       let changed = false;
