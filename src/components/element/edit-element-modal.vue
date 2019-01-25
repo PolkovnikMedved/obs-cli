@@ -38,8 +38,8 @@
                                     </div>
                                 </div>
                                 <div class="l-col-6">
-                                    <div class="c-form__field-group full-width">
-                                        <input id="tag" type="text" name="id" class="c-form__field spaced full-width" v-model="element.tag"/>
+                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.element.tag.$error }">
+                                        <input id="tag" type="text" name="id" class="c-form__field spaced full-width" v-model.trim="$v.element.tag.$model"/>
                                     </div>
                                 </div>
                             </div>
@@ -89,12 +89,12 @@
                             <div class="l-row">
                                 <div class="l-col-3 l-justify--end">
                                     <div class="c-form__field-group">
-                                        <label for="description" class="c-form__label spaced">Description</label>
+                                        <label for="description" class="c-form__label spaced">Description <span class="s-text s-text--danger">* </span></label>
                                     </div>
                                 </div>
                                 <div class="l-col-6">
-                                    <div class="c-form__field-group full-width">
-                                        <textarea id="description" class="c-form__label spaced" v-model="element.description"></textarea>
+                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.element.description.$error }">
+                                        <textarea id="description" class="c-form__label spaced" v-model="$v.element.description.$model"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                         <div class="l-row">
                             <div class="l-col-offset-3 l-col-6">
                                 <div class="c-form__field-group full-width">
-                                    <button class="c-btn c-btn--primary c-btn--raised spaced full-width s-text--center">Soumettre</button>
+                                    <button class="c-btn c-btn--primary c-btn--raised spaced full-width s-text--center" :disabled="$v.$invalid">Soumettre</button>
                                 </div>
                             </div>
                         </div>
@@ -121,6 +121,7 @@ import SuccessAlert from "../parts/success-alert.vue";
 import ErrorAlert from "../parts/error-alert.vue";
 import Loader from "../tools/loader.vue";
 import { state, show, hide } from "../tools/loader-component";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   props: { element: { required: true } },
@@ -180,6 +181,19 @@ export default {
       .catch(e => {
         this.errors.push(e);
       });
+  },
+  validations:  {
+    element: {
+      tag: {
+        minLength: minLength(2),
+        maxLength: maxLength(80)
+      },
+      description: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(767)
+      }
+    }
   }
 };
 </script>
