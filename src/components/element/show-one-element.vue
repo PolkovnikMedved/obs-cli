@@ -25,12 +25,15 @@
         <span class="primary-icon" @click="openEditModal(element)">
             <square-edit-outline-icon title="Edit"/>
         </span>
-            <button @click="addTop(index)" class="c-btn add-before spaced-icon"></button>
-            <button @click="addBottom(index)" class="c-btn add-after spaced-icon"></button>
+            <button @click="addTop(index)" class="c-btn add-before spaced-icon" title="Ajouter un élément au dessus"></button>
+            <button @click="addBottom(index)" class="c-btn add-after spaced-icon" title="Ajouter un élément en dessous"></button>
 
             <span class="info-icon spaced-icon" @click="openInformationModal(element)">
-            <information-icon title="Info"/>
-        </span>
+                <information-icon title="Info"/>
+            </span>
+            <span class="communist-button" @click="removeElement(index)">
+              <trash-icon title="Supprimer" class="icon" />
+            </span>
         </div>
     </div>
 </template>
@@ -42,11 +45,12 @@ import InformationIcon from "vue-material-design-icons/InformationVariant";
 import SquareEditOutlineIcon from "vue-material-design-icons/SquareEditOutline";
 import CheckIcon from "vue-material-design-icons/Check";
 import CloseIcon from "vue-material-design-icons/Close";
+import TrashIcon from "vue-material-design-icons/TrashCanOutline";
 
 export default {
   //name: ["show-element"],
   props: ["element", "index"],
-  components: { CloseIcon, SquareEditOutlineIcon, CheckIcon, InformationIcon },
+  components: {TrashIcon, CloseIcon, SquareEditOutlineIcon, CheckIcon, InformationIcon },
   methods: {
     openInformationModal: function(el) {
       this.$modal.show(OneStructureElementModal, { element: el }, { height: "auto" });
@@ -58,7 +62,11 @@ export default {
       this.$emit("reloadStructure", str);
     },
     addTop: function(index) { this.$emit("addTop", index); },
-    addBottom: function(index) { this.$emit("addBottom", index);}
+    addBottom: function(index) { this.$emit("addBottom", index);},
+    removeElement(index) {
+      console.log("SOE Element N° : " + index);
+      this.$emit("removeElement", index);
+    }
   }
 };
 </script>

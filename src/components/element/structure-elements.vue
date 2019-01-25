@@ -36,7 +36,12 @@
                 </div>
             </div>
 
-            <elements-list :structure="currentStructure" @reloadStructure="changeStructure" @elementsReordered="elementsReordered" @updateStructure="updateCurrentStructure"/>
+            <elements-list
+                :structure="currentStructure"
+                @reloadStructure="changeStructure"
+                @elementsReordered="elementsReordered"
+                @updateStructure="updateCurrentStructure"
+            />
         </main>
     </div>
 </template>
@@ -81,7 +86,7 @@ export default {
       HTTP.put("/structure/update", JSON.stringify(structure), { headers: {"Content-Type": "application/json"} })
         .then(r => {
           this.currentStructure = r.data;
-          this.successMessage = "L'élement de structure a bien été créé";
+          this.successMessage = "La structure a bien été mise à jour";
           this.success = true;
         })
         .catch(e => this.errors.push(e));

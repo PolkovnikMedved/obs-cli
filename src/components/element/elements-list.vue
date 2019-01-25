@@ -31,6 +31,7 @@
                     @remove="remove"
                     @reloadStructure="reloadStructure"
                     @create="create"
+                    @removeElement="removeElement"
                 />
             </draggable>
         </div>
@@ -38,12 +39,12 @@
 </template>
 
 <script>
-import SettingsIcon from "vue-material-design-icons/Settings";
-import ShowOneElement from "./show-one-element.vue";
-import CreateElement from "./create-element.vue";
-import Draggable from "vuedraggable";
+    import SettingsIcon from "vue-material-design-icons/Settings";
+    import ShowOneElement from "./show-one-element.vue";
+    import CreateElement from "./create-element.vue";
+    import Draggable from "vuedraggable";
 
-export default {
+    export default {
   props: ["structure"],
   data() {
     return {
@@ -115,6 +116,10 @@ export default {
     create(index, element) {
       this.structure.elements.splice(index, 0, element);
       console.log("Elements = " + this.structure.elements.length);
+      this.$emit("updateStructure", this.structure);
+    },
+    removeElement(index) {
+      this.structure.elements.splice(index, 1);
       this.$emit("updateStructure", this.structure);
     }
   }
