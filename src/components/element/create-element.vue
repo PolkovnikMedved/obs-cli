@@ -5,10 +5,10 @@
             <input type="text" class="c-form__field spaced-top-bottom full-width" placeholder="tag" v-model.trim="$v.element.tag.$model"/>
         </div>
         <div class="c-table__cell table-cell-five">
-            <input placeholder="Optional" type="checkbox" id="optional" class="c-form__field spaced-top-bottom"/>
+            <input placeholder="Optional" type="checkbox" v-model="element.optional" id="optional" class="c-form__field spaced-top-bottom"/>
         </div>
         <div class="c-table__cell table-cell-five">
-            <input placeholder="Repetitive" type="checkbox" id="repetitive" class="c-form__field spaced-top-bottom"/>
+            <input placeholder="Repetitive" type="checkbox" v-model="element.repetitive" id="repetitive" class="c-form__field spaced-top-bottom"/>
         </div>
         <div class="c-table__cell table-cell-twenty">
             <select name="type" class="c-form__field spaced-top-bottom full-width" id="type" v-if="structures && structures.length" v-model="element.typeStructure.name">
@@ -45,6 +45,7 @@
                     repetitive: false,
                     typeStructure: { name: '' },
                     description: '',
+                    sequence: 0
                 },
                 structures: []
             };
@@ -52,6 +53,7 @@
         components: { CheckIcon, TrashIcon },
         methods: {
             send(index) {
+                this.element.sequence = index;
                 console.log('We would send ' + JSON.stringify(this.element));
                 this.$emit('create', index, this.element);
             },
@@ -60,6 +62,7 @@
             },
         },
         async beforeMount() {
+            console.log("Structure: " + JSON.stringify(this.structure));
             HTTP.get("/structure/all-names")
                 .then(r => {
                     this.structures = r.data;

@@ -114,12 +114,12 @@
       this.$emit("reloadStructure", str);
     },
     create(index, element) {
-      this.structure.elements.splice(index, 0, element);
+      this.structure.elements.splice(index, 0, element); // Add one element at position index
       console.log("Elements = " + this.structure.elements.length);
       this.$emit("updateStructure", this.structure);
     },
     removeElement(index) {
-      this.structure.elements.splice(index, 1);
+      this.structure.elements.splice(index, 1); // remove one element at position index
       this.$emit("updateStructure", this.structure);
     }
   }

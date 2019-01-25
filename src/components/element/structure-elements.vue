@@ -83,6 +83,14 @@ export default {
       this.showMenu = !this.showMenu;
     },
     updateCurrentStructure(structure) {
+      //TODO if structure.element[?].typeStructure is a string we have to call the API to find it !
+      // Make type structure valid
+      structure.elements.forEach(el => {
+        if(el.typeStructure && el.typeStructure != null && (el.typeStructure.name === null || el.typeStructure.name === "") ) {
+          el.typeStructure = null;
+        }
+      });
+      console.log("Structure to be sent: " + JSON.stringify(structure));
       HTTP.put("/structure/update", JSON.stringify(structure), { headers: {"Content-Type": "application/json"} })
         .then(r => {
           this.currentStructure = r.data;
