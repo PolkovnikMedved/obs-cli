@@ -34,8 +34,8 @@
                                         </div>
                                     </div>
                                     <div class="l-col-8">
-                                        <div class="c-form__field-group full-width">
-                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="version.name" required/>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.version.name.$error }">
+                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model.trim="$v.version.name.$model" required/>
                                         </div>
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@
                                         </div>
                                     </div>
                                     <div class="l-col-8">
-                                        <div class="c-form__field-group full-width">
-                                            <textarea rows="5" id="description" class="c-form__field minimal-h spaced" name="description" v-model="version.description" required></textarea>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.version.description.$error }">
+                                            <textarea rows="5" id="description" class="c-form__field minimal-h spaced" name="description" v-model="$v.version.description.$model" required></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -76,8 +76,8 @@
                                         </div>
                                     </div>
                                     <div class="l-col-8">
-                                        <div class="c-form__field-group full-width">
-                                            <input id="dfa" class="c-form__field full-width spaced" type="text" name="dfa" v-model="version.dfaName"/>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.version.dfaName.$error }">
+                                            <input id="dfa" class="c-form__field full-width spaced" type="text" name="dfa" v-model="$v.version.dfaName.$model"/>
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
 
                         <div class="l-row">
                             <div class="l-col-offset-4 l-col-8">
-                                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit">Soumettre</button>
+                                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit" :disabled="$v.$invalid">Soumettre</button>
                             </div>
                         </div>
                     </form>
@@ -104,6 +104,7 @@ import SuccessAlert from "../parts/success-alert";
 import ErrorAlert from "../parts/error-alert";
 import { state, show, hide } from "../tools/loader-component";
 import Loader from "../tools/loader.vue";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
     name: 'add-version',
@@ -188,6 +189,23 @@ export default {
                 this.errors.push(e);
             })
             .finally(() => hide());
+    },
+    validations: {
+        version: {
+            name: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(20)
+            },
+            description: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(767)
+            },
+            dfaName: {
+                maxLength: maxLength(20)
+            }
+        },
     }
 };
 </script>

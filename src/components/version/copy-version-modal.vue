@@ -37,8 +37,8 @@
                                     </div>
 
                                     <div class="l-col-5">
-                                        <div class="c-form__field-group full-width">
-                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model="newVersionName" placeholder="EX.: 950_COPY"/>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.newVersionName.$error }">
+                                            <input id="id" class="c-form__field full-width spaced" type="text" name="id" v-model.trim="$v.newVersionName.$model" placeholder="EX.: 950_COPY"/>
                                         </div>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
 
                         <div class="l-row">
                             <div class="l-col-offset-3 l-col-5">
-                                <button class="c-btn c-btn--success c-btn--raised s-text--center spaced full-width">Submit</button>
+                                <button class="c-btn c-btn--success c-btn--raised s-text--center spaced full-width" :disabled="$v.$invalid">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -62,6 +62,7 @@ import { HTTP } from "../../http-common";
 import Close from "vue-material-design-icons/Close.vue";
 import ErrorAlert from "../parts/error-alert";
 import SuccessAlert from "../parts/success-alert";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
     name: "copy-version-modal",
@@ -93,6 +94,13 @@ export default {
             this.success = false;
         }
     },
-    components: {SuccessAlert, ErrorAlert, Close }
+    components: {SuccessAlert, ErrorAlert, Close },
+    validations: {
+      newVersionName: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(20)
+      }
+    }
 }
 </script>

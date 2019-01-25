@@ -55,13 +55,13 @@
                     </div>
                   </div>
                   <div class="l-col-8">
-                    <div class="c-form__field-group full-width">
+                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.version.description.$error }">
                       <textarea
                         rows="5"
                         id="description"
                         class="c-form__field minimal-h spaced"
                         name="description"
-                        v-model="version.description"
+                        v-model="$v.version.description.$model"
                         required
                       ></textarea>
                     </div>
@@ -91,7 +91,7 @@
                     </div>
                   </div>
                   <div class="l-col-8">
-                    <div class="c-form__field-group full-width">
+                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.version.dfaName.$error }">
                       <input
                         id="dfa"
                         class="c-form__field full-width spaced"
@@ -107,7 +107,7 @@
 
             <div class="l-row nice-top">
               <div class="l-col-offset-4 l-col-8">
-                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit" >
+                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit" :disabled="$v.$invalid">
                   Soumettre
                 </button>
               </div>
@@ -126,6 +126,7 @@ import ErrorAlert from "../parts/error-alert";
 import SuccessAlert from "../parts/success-alert";
 import { state, show, hide } from "../tools/loader-component";
 import Loader from "../tools/loader.vue";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   name: "edit-version",
@@ -218,6 +219,18 @@ export default {
         }
         hide();
       });
+  },
+  validations: {
+    version: {
+      description: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(767)
+      },
+      dfaName: {
+        maxLength: maxLength(20)
+      }
+    }
   }
 };
 </script>
