@@ -5,8 +5,11 @@ import store from "./store";
 import "./registerServiceWorker";
 import moment from "moment";
 import VModal from "vue-js-modal";
+import Vuelidate from "vuelidate";
 
 Vue.use(VModal, { dialog: true, dynamic: true});
+Vue.use(Vuelidate);
+
 Vue.config.productionTip = false;
 Vue.filter("formatDate", function(value) {
   if (value) {

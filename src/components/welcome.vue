@@ -15,8 +15,8 @@
               </div>
 
               <div class="l-col-4">
-                <div class="c-form__field-group full-width">
-                  <input id="username-1" class="c-form__field full-width" type="text" name="username" autocomplete="off">
+                <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.user.pseudo.$error }">
+                  <input id="username-1" class="c-form__field full-width" v-model.trim="$v.user.pseudo.$model" type="text" name="username" autocomplete="off">
                 </div>
               </div>
             </div>
@@ -29,7 +29,7 @@
 
               <div class="l-col-4">
                 <div class="c-form__field-group full-width">
-                  <input id="password-1" class="c-form__field full-width" type="password" name="password" autocomplete="off">
+                  <input id="password-1" class="c-form__field full-width" v-model.trim="$v.user.pass.$model" type="password" name="password" autocomplete="off">
                 </div>
               </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="l-row">
               <div class="l-col-offset-4 l-col-4">
                 <div class="c-form__field-group full-width">
-                  <router-link :to="{ name: 'documents' }" class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button s-text--center" type="submit" style="margin-top:5px">Sign in</router-link>
+                  <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button s-text--center" type="submit" style="margin-top:5px" :disabled="$v.$invalid" @click.prevent="goToDocuments">Sign in</button>
                 </div>
               </div>
             </div>
@@ -51,6 +51,7 @@
 <script>
 import { HTTP } from "../http-common";
 import ErrorAlert from "./parts/error-alert";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   name: "welcome",
@@ -58,13 +59,19 @@ export default {
     return {
       hello: "Bienvenue dans l'observatoire 3.0!",
       serverMessage: "",
-      errors: []
+      errors: [],
+      user: { pseudo: "", pass: "" }
     };
   },
   computed: {},
-  methods: {},
+  methods: {
+    goToDocuments() {
+      this.$router.push({ name: "documents" });
+    }
+  },
   components: { ErrorAlert },
   async beforeMount() {
+    console.log("$V : " + this.$v);
     // Let us see if the server is up
     HTTP.get("")
       .then(r => {
@@ -72,6 +79,17 @@ export default {
         console.log(JSON.stringify(this.serverMessage));
       })
       .catch(e => this.errors.push(e));
+  },
+  validations: {
+    user: {
+      pseudo: {
+        required,
+        minLength: minLength(2)
+      },
+      pass: {
+        required
+      }
+    }
   }
 };
 </script>
