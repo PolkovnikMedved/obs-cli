@@ -185,7 +185,7 @@ export default {
           } else {
             this.$modal.show("dialog", {
               title: "Etes-vous sûr ?",
-              text: "Cette structure va être supprimée. Voulez-vous continuer ?",
+              text: "La structure " + name + " va être supprimée. Voulez-vous continuer ?",
               buttons: [
                 {
                   title: "Non",

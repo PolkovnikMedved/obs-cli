@@ -40,8 +40,8 @@
                                         </div>
                                     </div>
                                     <div class="l-col-8">
-                                        <div class="c-form__field-group full-width">
-                                            <input id="tag" class="c-form__field full-width spaced" type="text" name="tag" v-model="structure.tag"/>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.structure.tag.$error }">
+                                            <input id="tag" class="c-form__field full-width spaced" type="text" name="tag" v-model.trim="$v.structure.tag.$model"/>
                                         </div>
                                     </div>
                                 </div>
@@ -53,8 +53,8 @@
                                         </div>
                                     </div>
                                     <div class="l-col-8">
-                                        <div class="c-form__field-group full-width">
-                                            <textarea id="description" class="c-form__field spaced" name="description" v-model="structure.description"></textarea>
+                                        <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.structure.description.$error }">
+                                            <textarea id="description" class="c-form__field spaced" name="description" v-model.trim="$v.structure.description.$model"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
 
                         <div class="l-row nice-top">
                             <div class="l-col-offset-4 l-col-8">
-                                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit">Soumettre</button>
+                                <button class="c-btn c-btn--primary c-btn--raised c-btn--ripple c-form__button full-width s-text--center spaced" type="submit" :disabled="$v.$invalid">Soumettre</button>
                             </div>
                         </div>
                     </form>
@@ -82,6 +82,7 @@ import SuccessAlert from "../parts/success-alert.vue";
 import { HTTP } from "../../http-common";
 import { hide, show, state } from "../tools/loader-component";
 import Loader from "../tools/loader.vue";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   name: "edit-structure",
@@ -134,6 +135,19 @@ export default {
         this.errors.push(e);
         hide();
       });
+  },
+  validations: {
+    structure: {
+      tag: {
+        minLength: minLength(2),
+        maxLength: maxLength(80)
+      },
+      description: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(767)
+      }
+    }
   }
 };
 </script>
