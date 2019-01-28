@@ -64,6 +64,7 @@ export default {
     return {
       showMenu: true,
       initialElements: [],
+      reorderedElements: [],
       initialStructure: [],
       currentStructure: [],
       errors: [],
@@ -83,14 +84,38 @@ export default {
       this.showMenu = !this.showMenu;
     },
     updateCurrentStructure(structure) {
-      //TODO if structure.element[?].typeStructure is a string we have to call the API to find it !
-      // Make type structure valid
+      show();
+      // Make type structure valid: set type null if type.name is empty
       structure.elements.forEach(el => {
         if(el.typeStructure && el.typeStructure != null && (el.typeStructure.name === null || el.typeStructure.name === "") ) {
           el.typeStructure = null;
         }
       });
-      console.log("Structure to be sent: " + JSON.stringify(structure));
+      let valid = true;
+      // Make type structure valid: get structure type json from server by it's name
+      structure.elements.forEach(el => {
+        if (el.typeStructure && el.typeStructure != null && el.typeStructure.name && el.typeStructure.name != null && !el.typeStructure.description) {
+          valid = false;
+          HTTP.get("/structure/" + el.typeStructure.name)
+            .then(r => {
+              el.typeStructure = r.data;
+              console.log("Received data = " + JSON.stringify(r.data));
+              console.log("Element structure = " + JSON.stringify(el.typeStructure));
+              this.updateStructure(structure);
+            })
+            .catch(e => this.errors.push(e))
+            .finally(() => {
+              hide();
+              return undefined; // If the structure is invalid, we get the invalid member (One! we can't add several elements) structure type, update the structure and stop.
+            });
+        }
+      });
+      if (valid) {
+        this.updateStructure(structure);
+        hide();
+      }
+    },
+    updateStructure(structure) {
       HTTP.put("/structure/update", JSON.stringify(structure), { headers: {"Content-Type": "application/json"} })
         .then(r => {
           this.currentStructure = r.data;
@@ -100,6 +125,10 @@ export default {
         .catch(e => this.errors.push(e));
     },
     updateOrder: function () {
+      this.currentStructure.elements = this.reorderedElements;
+      for (let i = 0; i < this.currentStructure.elements.length; i++) {
+        this.currentStructure.elements[i].sequence = i;
+      }
       HTTP.put("structure/update-order", this.currentStructure)
         .then(r => {
           this.currentStructure = r.data;
@@ -118,6 +147,7 @@ export default {
         for (let i = 0; i < this.initialElements.length; i++) {
           if (this.initialElements[i] !== reorderedElements[i]) {
             changed = true;
+            this.reorderedElements = reorderedElements;
             break;
           }
         }

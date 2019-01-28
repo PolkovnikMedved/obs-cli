@@ -62,7 +62,6 @@
             },
         },
         async beforeMount() {
-            console.log("Structure: " + JSON.stringify(this.structure));
             HTTP.get("/structure/all-names")
                 .then(r => {
                     this.structures = r.data;

@@ -115,7 +115,11 @@
     },
     create(index, element) {
       this.structure.elements.splice(index, 0, element); // Add one element at position index
-      console.log("Elements = " + this.structure.elements.length);
+      for (let i = 0; i < this.structure.elements.length; i++) {
+        this.structure.elements[i].sequence = i;
+      }
+      console.log("Structure = " + JSON.stringify(this.structure));
+      console.log("Elements  = " + this.structure.elements.length);
       this.$emit("updateStructure", this.structure);
     },
     removeElement(index) {
