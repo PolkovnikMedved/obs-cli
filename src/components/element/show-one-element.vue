@@ -64,7 +64,6 @@ export default {
     addTop: function(index) { this.$emit("addTop", index); },
     addBottom: function(index) { this.$emit("addBottom", index);},
     removeElement(index) {
-      console.log("SOE Element N° : " + index);
       this.$emit("removeElement", index);
     }
   }

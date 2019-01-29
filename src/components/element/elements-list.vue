@@ -55,7 +55,6 @@
   components: { ShowOneElement, CreateElement, SettingsIcon, Draggable },
   watch: {
     structure(val) {
-      console.log("Call to watcher");
       if (val && val.elements && val.elements.length > 0) {
         // Structure with elements
         this.children = [];

@@ -71,7 +71,6 @@ export default {
   },
   components: { ErrorAlert },
   async beforeMount() {
-    console.log("$V : " + this.$v);
     // Let us see if the server is up
     HTTP.get("")
       .then(r => {
