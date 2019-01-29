@@ -39,12 +39,12 @@
 </template>
 
 <script>
-    import SettingsIcon from "vue-material-design-icons/Settings";
-    import ShowOneElement from "./show-one-element.vue";
-    import CreateElement from "./create-element.vue";
-    import Draggable from "vuedraggable";
+import SettingsIcon from "vue-material-design-icons/Settings";
+import ShowOneElement from "./show-one-element.vue";
+import CreateElement from "./create-element.vue";
+import Draggable from "vuedraggable";
 
-    export default {
+export default {
   props: ["structure"],
   data() {
     return {
@@ -56,6 +56,9 @@
   watch: {
     structure(val) {
       if (val && val.elements && val.elements.length > 0) {
+        // reset full property
+        this.full = false;
+
         // Structure with elements
         this.children = [];
         // Sort the elements by sequence

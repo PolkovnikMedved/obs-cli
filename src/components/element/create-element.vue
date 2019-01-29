@@ -11,7 +11,7 @@
             <input placeholder="Repetitive" type="checkbox" v-model="element.repetitive" id="repetitive" class="c-form__field spaced-top-bottom"/>
         </div>
         <div class="c-table__cell table-cell-twenty">
-            <select name="type" class="c-form__field spaced-top-bottom full-width" id="type" v-if="structures && structures.length" v-model="element.typeStructure.name">
+            <select name="type" class="c-form__field spaced-top-bottom full-width" id="type" v-if="structures && structures.length" v-model="type">
                 <option v-for="structure of structures" :key="structure">{{ structure }}</option>
             </select>
         </div>
@@ -43,10 +43,10 @@
                     tag: '',
                     optional: false,
                     repetitive: false,
-                    typeStructure: { name: '' },
                     description: '',
                     sequence: 0
                 },
+                type: '',
                 structures: []
             };
         },
@@ -54,6 +54,9 @@
         methods: {
             send(index) {
                 this.element.sequence = index;
+                if(this.type !== null) {
+                    this.element.typeStructure = { name: this.type};
+                }
                 this.$emit('create', index, this.element);
             },
             remove(index) {
