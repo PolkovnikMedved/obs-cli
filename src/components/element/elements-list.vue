@@ -117,8 +117,6 @@
       for (let i = 0; i < this.structure.elements.length; i++) {
         this.structure.elements[i].sequence = i;
       }
-      console.log("Structure = " + JSON.stringify(this.structure));
-      console.log("Elements  = " + this.structure.elements.length);
       this.$emit("updateStructure", this.structure);
     },
     removeElement(index) {

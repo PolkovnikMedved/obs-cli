@@ -54,7 +54,6 @@
         methods: {
             send(index) {
                 this.element.sequence = index;
-                console.log('We would send ' + JSON.stringify(this.element));
                 this.$emit('create', index, this.element);
             },
             remove(index) {

@@ -99,8 +99,6 @@ export default {
           HTTP.get("/structure/" + el.typeStructure.name)
             .then(r => {
               el.typeStructure = r.data;
-              console.log("Received data = " + JSON.stringify(r.data));
-              console.log("Element structure = " + JSON.stringify(el.typeStructure));
               this.updateStructure(structure);
             })
             .catch(e => this.errors.push(e))

@@ -99,7 +99,6 @@ export default {
       this.structure.description = "";
     },
     createStructure: function() {
-      console.log("Structure = " + JSON.stringify(this.structure));
       HTTP.post("structure/add", JSON.stringify(this.structure), { headers: {'Content-Type': 'application/json'} })
         .then(r => {
           this.createdName = r.data.name;

@@ -109,8 +109,7 @@ export default {
     updateStructure: function() {
       show();
       HTTP.put("structure/update", JSON.stringify(this.structure), { headers: {"Content-Type": "application/json"} })
-        .then(r => {
-          if (r) console.log();
+        .then(() => {
           this.updated = true;
           hide();
         })

@@ -165,11 +165,9 @@ export default {
       this.updated = false;
 
       if ( typeof this.version.structure === "object") {
-        console.log("Structure is an object");
         this.updateVersion(this.version);
         hide();
       } else if ( typeof this.version.structure === "string") {
-        console.log("Structure is a string");
         HTTP.get("/structure/" + this.version.structure)
           .then(r => {
             this.version.structure = r.data;

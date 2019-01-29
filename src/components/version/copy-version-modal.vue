@@ -79,8 +79,7 @@ export default {
         createCopy: function () {
             if(this.version_id !== this.newVersionName) {
                 HTTP.get("/version/copy?from=" + this.version_id + "&to=" + this.newVersionName)
-                    .then(r => {
-                        console.log(r.data);
+                    .then(() => {
                         this.success = true;
                     })
                     .catch(e => this.errors.push(e));

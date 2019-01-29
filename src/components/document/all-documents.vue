@@ -306,7 +306,6 @@ export default {
                 }
               }
               this.updateDocument(document);
-              console.log("Crazy man !");
               this.$modal.hide("dialog");
             }
           }
