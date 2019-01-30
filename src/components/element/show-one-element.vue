@@ -2,8 +2,8 @@
     <div class="c-table__item show-element" :data-index="index">
         <div class="c-table__cell s-text--sm table-cell-five">{{ element.sequence }}</div>
         <div class="c-table__cell s-text--sm table-cell-twenty">
-            <span v-if="element.tag == null && element.typeStructure != null && element.typeStructure.tag != null">{{ element.typeStructure.tag }}</span>
-            <span v-else-if="element.tag != null">{{ element.tag }}</span>
+            <span v-if="element.tag != null">{{ element.tag }}</span>
+            <span v-else-if="element.typeStructure && element.typeStructure.name">{{ element.typeStructure.name }}</span>
         </div>
         <div class="c-table__cell s-text--sm table-cell-five">
             <span v-if="element.optional" class="ecolo-button"><check-icon/></span>
