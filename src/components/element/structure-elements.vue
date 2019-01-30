@@ -1,6 +1,6 @@
 <template>
     <div class="t-body">
-        <elements-sidebar :class="{ 'hidden-menu': !this.showMenu }"/>
+        <elements-sidebar :current_structure_name="currentStructure.name" :class="{ 'hidden-menu': !this.showMenu }"/>
 
         <span @click="showMenuHandler" class="menu-opener">
             <LeftArrow title="Close Menu" v-if="this.showMenu" />
