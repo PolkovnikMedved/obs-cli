@@ -9,7 +9,7 @@
             </div>
 
             <div class="c-modal__body">
-                <success-alert @closeSuccess="closeSuccess" :success="updated" :success_message="this.successMessage"/>
+                <success-alert @closeSuccess="closeSuccess" :success="updated" :success_message="successMessage"/>
                 <error-alert :errors="this.errors" />
                 <loader v-if="visible"></loader>
 
@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="l-col-6">
                                     <div class="c-form__field-group full-width">
-                                        <input id="id" type="text" name="id" class="c-form__field spaced full-width" disabled v-model="element.id"/>
+                                        <input id="id" type="text" class="c-form__field spaced full-width" disabled v-model="currentElement.id"/>
                                     </div>
                                 </div>
                             </div>
@@ -38,8 +38,8 @@
                                     </div>
                                 </div>
                                 <div class="l-col-6">
-                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.element.tag.$error }">
-                                        <input id="tag" type="text" name="id" class="c-form__field spaced full-width" v-model.trim="$v.element.tag.$model"/>
+                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.currentElement.tag.$error }">
+                                        <input id="tag" type="text" class="c-form__field spaced full-width" v-model.trim="$v.currentElement.tag.$model"/>
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="l-col-6">
                                     <div class="c-form__field-group">
-                                        <input id="optional" type="checkbox" name="id" class="c-form__field spaced" v-model="element.optional"/>
+                                        <input id="optional" type="checkbox" class="c-form__field spaced" v-model="currentElement.optional"/>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="l-col-6">
                                     <div class="c-form__field-group">
-                                        <input id="repetitive" type="checkbox" name="id" class="c-form__field spaced" v-model="element.repetitive"/>
+                                        <input id="repetitive" type="checkbox" class="c-form__field spaced" v-model="currentElement.repetitive"/>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
 
                                 <div class="l-col-6">
                                     <div class="c-form__field-group full-width">
-                                        <select class="c-form__field spaced full-width" id="type" v-if="structures && structures.length" v-model="element.typeStructure.name">
+                                        <select class="c-form__field spaced full-width" id="type" v-if="structures && structures.length" v-model="chosenType">
                                             <option v-for="structure of structures" :key="structure">{{ structure }}</option>
                                         </select>
                                     </div>
@@ -93,8 +93,8 @@
                                     </div>
                                 </div>
                                 <div class="l-col-6">
-                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.element.description.$error }">
-                                        <textarea id="description" class="c-form__label spaced" v-model="$v.element.description.$model"></textarea>
+                                    <div class="c-form__field-group full-width" :class="{ 'c-form__field--danger': $v.currentElement.description.$error }">
+                                        <textarea id="description" class="c-form__label spaced" v-model="$v.currentElement.description.$model"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,16 @@ export default {
       errors: [],
       updated: false,
       successMessage: "The element has been updated",
-      structures: []
+      structures: [],
+      currentElement: {
+        id: 0,
+        tag: "",
+        optional: false,
+        repetitive: false,
+        description: "",
+        sequence: 0
+      },
+      chosenType: ""
     };
   },
   computed: {
@@ -142,22 +151,31 @@ export default {
   methods: {
     submit() {
       show();
-      if (typeof this.element.typeStructure === "object" ) {
-        this.updateElement(this.element);
-      } else if ( typeof this.element.typeStructure === "string") {
-        HTTP.get("/structure/" + this.element.typeStructure)
+      if (this.chosenType !== null && this.chosenType !== "") {
+        HTTP.get("/structure/" + this.chosenType)
           .then(r => {
+            this.element.tag = this.currentElement.tag;
+            this.element.description = this.currentElement.description;
+            this.element.sequence = this.currentElement.sequence;
+            this.element.optional = this.currentElement.optional;
+            this.element.repetitive = this.currentElement.repetitive;
             this.element.typeStructure = r.data;
             this.updateElement(this.element);
           })
-          .catch(e => this.errors.push(e));
+          .catch(e => {
+            this.errors.push(e);
+          })
+          .finally(() => hide());
       }
       else {
-        console.log("Element type structure is not object or string: " + JSON.stringify(this.element) + "/");
-        console.log("Type = " + typeof this.element.typeStructure);
-        console.log("Type = " + ( typeof this.element.typeStructure === "object") );
+        this.element.tag = this.currentElement.tag;
+        this.element.description = this.currentElement.description;
+        this.element.sequence = this.currentElement.sequence;
+        this.element.optional = this.currentElement.optional;
+        this.element.repetitive = this.currentElement.repetitive;
+        this.updateElement(this.element);
+        hide();
       }
-      hide();
     },
     close: function() {
       this.$emit("close");
@@ -166,9 +184,11 @@ export default {
       this.updated = false;
     },
     updateElement(element) {
+      console.log("Call to update element");
       HTTP.put("/structure-element/update", JSON.stringify(element), { headers: {"Content-Type": "application/json"}})
         .then(() => {
           this.updated = true;
+          console.log("Updated = " + this.updated + ", message = " + this.successMessage);
         })
         .catch(e => this.errors.push(e));
     }
@@ -181,9 +201,16 @@ export default {
       .catch(e => {
         this.errors.push(e);
       });
+    this.currentElement.id = this.element.id;
+    this.currentElement.tag = this.element.tag;
+    this.currentElement.description = this.element.description;
+    this.currentElement.optional = this.element.optional;
+    this.currentElement.repetitive = this.element.repetitive;
+    this.currentElement.sequence = this.element.sequence;
+    this.chosenType = (this.element.typeStructure && this.element.typeStructure.name) ? this.element.typeStructure.name : "";
   },
   validations:  {
-    element: {
+    currentElement: {
       tag: {
         minLength: minLength(2),
         maxLength: maxLength(80)
