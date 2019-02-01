@@ -39,8 +39,12 @@ export default {
     getXML(empty) {
       HTTP.get("/structure/xml?name=" + this.current_structure_name + "&empty=" + empty)
         .then(r => {
-          console.log(r.data);
-          let blob = new Blob([r.data], { type: "application/xml" });
+          // Replace >< by >\r\n< for papyrus....
+          let xml = r.data;
+          xml = xml.replace(/></g, ">\r\n<");
+          xml += "\r\n";
+
+          let blob = new Blob([xml], { type: "application/xml" });
           let link = document.createElement("a");
           link.href = window.URL.createObjectURL(blob);
           link.download = this.current_structure_name + ".xml";
